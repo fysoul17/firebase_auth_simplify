@@ -59,15 +59,20 @@ api.signOut();
 ...
 ```
 
+So if your priority is 'simplisity' and 'less code', consider using this package.
+
+## Who should consider NOT using
+As this package includes several 3rd party sign-ins, such as google, facebook and kakao, it contains related packages which you might not need it. For example, even though you only provide email and google sign-in methods to the customer, your project will still contain facebook or other sign-in packages which is not necessary in your case. If the issue matters to you, I recommend using your own way instead of implementing this package
+
 ## Support
 If the package was useful or saved your time, please do not hesitate to buy me a cup of coffee! ;)  
 The more caffeine I get, the more useful projects I can make in the future. 
 
 <a href="https://www.buymeacoffee.com/Oj17EcZ" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
-### Other useful packages
-[Material design Speed Dial](https://github.com/fysoul17/flutter_speed_dial_material_design)
-[Google Maps Place Picker](https://github.com/fysoul17/google_maps_place_picker/edit/master/README.md)
+### Other useful packages you might be instrested
+[Material design Speed Dial](https://pub.dev/packages/flutter_speed_dial_material_design)
+[Google Maps Place Picker](https://pub.dev/packages/google_maps_place_picker)
 
 
 ## Getting Started
