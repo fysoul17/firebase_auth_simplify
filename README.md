@@ -64,6 +64,18 @@ So if your priority is 'simplisity' and 'less code', consider using this package
 ## Who should consider NOT using
 As this package includes several 3rd party sign-ins, such as google, facebook and kakao, it contains related packages which you might not need it. For example, even though you only provide email and google sign-in methods to the customer, your project will still contain facebook or other sign-in packages which is not necessary in your case. If the issue matters to you, I recommend using your own way instead of implementing this package
 
+## Currently supporting Sign-ins (X = supporting)
+- [X] Email
+- [X] Phone
+- [X] Google
+- [ ] Google Play Games
+- [X] Facebook
+- [X] Kakao
+- [X] Apple
+- [ ] GameCenter
+- [ ] Twitter
+- [ ] Github
+
 ## Support
 If the package was useful or saved your time, please do not hesitate to buy me a cup of coffee! ;)  
 The more caffeine I get, the more useful projects I can make in the future. 
