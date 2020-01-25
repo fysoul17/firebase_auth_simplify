@@ -1,11 +1,11 @@
 # Firebase Authentication Simplify
 
-A high-level framework of Firebase Auth package that wraps several lines of codes to one line in order to easily use sign-in and out function.
+A high-level framework of Firebase Auth package that wraps several lines of codes to one line in order to easily use sign-in function.
 
 ## Why/Who should use this
 
-You may want to use [firebase_auth](https://pub.dev/packages/firebase_auth) pacakage directly if you need specific customization on sign-in/out logic.  
-However, although the most of usecases have almost the same signing-in and out codes, it is pain to write redundant codes everytime even if it is just a several lines of code. 
+You may want to use [firebase_auth](https://pub.dev/packages/firebase_auth) package directly if you need specific customization on sign-in/out logic.      
+However, although the most of usecases have almost the same signing-in and out codes, it is pain to write redundant codes everytime even if it is just a several lines of code. Especially, when you provide more than 2 sign-in methods. 
 
 You will basically write some codes like below for **Each** of sign-in methods, and you want to manage it seperatly from the widget you use.
 
@@ -54,15 +54,15 @@ await api.signIn();
 FacebookSignInAPI api;
 await api.signIn();
 
-api.signOut();
-
 ...
 ```
 
 So if your priority is 'simplisity' and 'less code', consider using this package.
 
-## Who should consider NOT using
-As this package includes several 3rd party sign-ins, such as google, facebook and kakao, it contains related packages which you might not need it. For example, even though you only provide email and google sign-in methods to the customer, your project will still contain facebook or other sign-in packages which is not necessary in your case. If the issue matters to you, I recommend using your own way instead of implementing this package
+## Who should consider NOT using this
+Firstly, if your project uses only one or two sign-in methods, it might be better using [firebase_auth](https://pub.dev/packages/firebase_auth) package directly.
+
+Secondly, as this package includes several 3rd party sign-ins, such as google, facebook and kakao, it contains related packages which you might not need it. For example, even though you only provide email and google sign-in methods to the customer, your project will still contain facebook or other sign-in packages which is not necessary in your case. If the issue matters to you, I recommend using your own way instead of implementing this package
 
 ## Currently supporting Sign-ins (X = supporting)
 - [X] Email
@@ -89,7 +89,8 @@ The more caffeine I get, the more useful projects I can make in the future.
 
 ## Getting Started
 
-This project uses firebase_auth package and is just a wrapper of it. So please make sure you follow configuration instruction of [firebase_auth](https://pub.dev/packages/firebase_auth).
+### Firebase Auth Setup
+This project uses firebase_auth package and is just a wrapper of it. So please make sure you follow setup instruction of [firebase_auth](https://pub.dev/packages/firebase_auth).
 
 You basically need to [set google services](https://pub.dev/packages/firebase_auth) at Android build.gradle files, and then **you must [add App](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html#6) at Firebase Console**.
 
@@ -100,3 +101,8 @@ You basically need to [set google services](https://pub.dev/packages/firebase_au
 > Default FirebaseApp is not initialized in this process [package name].
 > Make sure to call FirebaseApp.initializeApp(Context) first.
 > ```
+
+### Google sign in Setup
+Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and follow their instruction
+
+### Facebook sign in Setup
