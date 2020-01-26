@@ -69,11 +69,11 @@ Secondly, as this package includes several 3rd party sign-ins, such as google, f
 - [X] Email
 - [X] Phone
 - [X] Google
-- [ ] Google Play Games
+- [ ] Google Play Games (Need to wait for the [firebase_auth](https://pub.dev/packages/firebase_auth) to support this)
 - [X] Facebook
 - [X] Kakao
-- [ ] Apple (Need to wait for the FirebaseAuth to support this)
-- [ ] GameCenter
+- [ ] Apple (Need to wait for the [firebase_auth](https://pub.dev/packages/firebase_auth) to support this)
+- [ ] GameCenter (Need to wait for the [firebase_auth](https://pub.dev/packages/firebase_auth) to support this)
 - [ ] Twitter
 - [ ] Github
 
