@@ -100,9 +100,77 @@ You basically need to [set google services](https://pub.dev/packages/firebase_au
 > ```
 
 ### Google sign in Setup
-Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and follow their instruction
+Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and follow the instruction.
 
 ### Facebook sign in Setup
+
+### Kakao sign in Setup
+Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction (Or see below for Kakao developer settings)
+
+> Note: Kakao is a free chat app platform on Android/iOS. As almost Korean use this app, I recommend implementing this option if you are > targeting South Korea as well. Setting up this is quite challenging though.
+
+You need to create Kakao account first to use Kakao developer kit.
+1. [Create your Kakao account](https://accounts.kakao.com/weblogin/create_account?continue=https%3A%2F%2Fdevelopers.kakao.com%2Flogin%3FredirectUrl%3D%2Fapps%2Fnew&lang=en)
+
+2. [Create app](https://developers.kakao.com/apps/new) to use for sign-in.   
+For those who cannot find an English link, each section represents 'Icon, Name of App, Organization' that will show up in the sign-in screen.    
+You can find 4~5 keys on the screen when you successfully created the app. We will use the top key which is 'Native Key'.
+
+3. Open settings screen and add Android/iOS. 
+
+#### Android
+1. Get key hash, and add where your package name and url is created. There will be empty space named '키 해시'.
+```
+[Debug Key hash]
+keytool -exportcert -alias androiddebugkey -keystore <debug_keystore_path> -storepass android -keypass android | openssl sha1 -binary | openssl base64
+```
+
+```
+[Release Key hash]
+keytool -exportcert -alias <release_key_alias> -keystore <release_keystore_path> | openssl sha1 -binary | openssl base64
+```
+
+2. Create kakao_string.xml in android/app/src/main/res/values folder with the code below
+```
+<resources>
+    <string name="kakao_app_key">YOUR_NATIVE_KEY_HERE</string>
+</resources>
+```
+
+3. Open AndroidManifest.xml and add below codes
+```
+<!-- 1 -->
+<uses-permission android:name="android.permission.INTERNET" />
+
+<application>
+    <!-- 2 -->
+    <activity
+        ...
+        android:name=".SampleLoginActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <!-- 3 -->
+    <meta-data
+        android:name="com.kakao.sdk.AppKey"
+        android:value="@string/kakao_app_key" />
+    ...
+</application>
+```
+
+```
+subprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
+    }
+}
+```
+
+#### iOS
+1. [Download sdk](https://developers.kakao.com/sdk/latest-ios-sdk), and follow instruction on [developer page](https://developers.kakao.com/docs/ios). You won't need to read Korean as it is explained with screenshots.
 
 
 ## Usage
@@ -124,7 +192,7 @@ FirebaseGoogleAuthAPI(scopes: ['email', 'https://www.googleapis.com/auth/contact
 ```
 
 ### Using the wrapper
-We provide FirebaseAuthProvider so that we can manage a sign-out function for you later. 
+We provide FirebaseAuthProvider so that we can manage a sign-out function for you. 
 
 ```dart
 FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI());
@@ -133,7 +201,7 @@ FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI());
 FirebaseAuthProvider.instance.signOut();
 ```
   
-**NOTE: Good thing to use this way is it does not only sign out from Firestore, but also sign out for 3rd party provider which we can allow user to sign in with another account and with the same provider**
+**NOTE: Good thing to use this way is it does not only sign out from Firestore, but also sign out from 3rd party provider which we can allow user to sign-in with another account to the same provider**
 
 
 ### Other useful packages you might be instrested
