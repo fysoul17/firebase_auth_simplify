@@ -48,7 +48,9 @@ and
 
 ```dart
 // Google
-await FirebaseAuthAPI.signInWith(GoogleSignInAPI());
+FirebaseAuthAPI.signInWith(GoogleSignInAPI())
+    .then((FirebaseUser user) => print(user))
+    .catchError((e) => print(e));
 
 // Facebook
 await FirebaseAuthAPI.signInWith(FacebookSignInAPI());
