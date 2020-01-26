@@ -47,20 +47,19 @@ import 'package:firebase_auth_simplify/firebase_auth_simplify.dart';
 and
 
 ```dart
-GoogleSignInAPI api;
-await api.signIn();
+// Google
+await FirebaseAuthAPI.signInWith(GoogleSignInAPI());
 
-
-FacebookSignInAPI api;
-await api.signIn();
+// Facebook
+await FirebaseAuthAPI.signInWith(FacebookSignInAPI());
 
 ...
 ```
 
-So if your priority is 'simplisity' and 'less code', consider using this package.
+So if your priority is 'simplisity' and 'less code' for 3rd party integration, it is worth using this package.
 
 ## Who should consider NOT using this
-Firstly, if your project uses only one or two sign-in methods, it might be better using [firebase_auth](https://pub.dev/packages/firebase_auth) package directly.
+Firstly, if your project only uses firebase provided sign-in methods, such as email or phone auth, it is better using [firebase_auth](https://pub.dev/packages/firebase_auth) package directly.
 
 Secondly, as this package includes several 3rd party sign-ins, such as google, facebook and kakao, it contains related packages which you might not need it. For example, even though you only provide email and google sign-in methods to the customer, your project will still contain facebook or other sign-in packages which is not necessary in your case. If the issue matters to you, I recommend using your own way instead of implementing this package
 
@@ -71,7 +70,7 @@ Secondly, as this package includes several 3rd party sign-ins, such as google, f
 - [ ] Google Play Games
 - [X] Facebook
 - [X] Kakao
-- [X] Apple
+- [ ] Apple (Need to wait for the FirebaseAuth to support this)
 - [ ] GameCenter
 - [ ] Twitter
 - [ ] Github
@@ -81,10 +80,6 @@ If the package was useful or saved your time, please do not hesitate to buy me a
 The more caffeine I get, the more useful projects I can make in the future. 
 
 <a href="https://www.buymeacoffee.com/Oj17EcZ" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
-
-### Other useful packages you might be instrested
-[Material design Speed Dial](https://pub.dev/packages/flutter_speed_dial_material_design)   
-[Google Maps Place Picker](https://pub.dev/packages/google_maps_place_picker)
 
 
 ## Getting Started
@@ -106,3 +101,41 @@ You basically need to [set google services](https://pub.dev/packages/firebase_au
 Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and follow their instruction
 
 ### Facebook sign in Setup
+
+
+## Usage
+
+### Simplest way
+Simply initialize the class you want to sign in for, and call signIn() function.   
+**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because 'firebase_auth' package does not support the function yet. It only provides signOut() function for firebase provided auth such as email.**
+
+```dart
+// e-mail
+FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signUp();
+FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signIn();
+
+// google (This automatically invokes signInSilently() if the user is previously authenticated user)
+FirebaseGoogleAuthAPI().signIn();
+// or
+FirebaseGoogleAuthAPI(scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly']).signIn();
+
+```
+
+### Using the wrapper
+We provide FirebaseAuthProvider so that we can manage a sign-out function for you later. 
+
+```dart
+FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI());
+
+// Then you can sign-out anywhere. 
+FirebaseAuthProvider.instance.signOut();
+```
+  
+**NOTE: Good thing to use this way is it does not only sign out from Firestore, but also sign out for 3rd party provider which we can allow user to sign in with another account and with the same provider**
+
+
+### Other useful packages you might be instrested
+[Material design Speed Dial](https://pub.dev/packages/flutter_speed_dial_material_design)   
+[Google Maps Place Picker](https://pub.dev/packages/google_maps_place_picker)
+
+<a href="https://www.buymeacoffee.com/Oj17EcZ" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
