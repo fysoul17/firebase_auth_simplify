@@ -107,7 +107,7 @@ Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and fol
 ### Kakao sign in Setup
 Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction (Or see below for Kakao developer settings)
 
-> Note: Kakao is a free chat app platform on Android/iOS. As almost Korean use this app, I recommend implementing this option if you are > targeting South Korea as well. Setting up this is quite challenging though.
+> Note: Kakao is a free chat app platform on Android/iOS. As almost Korean use this app, I recommend implementing this option if you are targeting South Korea as well. Setting up this is quite challenging though.
 
 You need to create Kakao account first to use Kakao developer kit.
 1. [Create your Kakao account](https://accounts.kakao.com/weblogin/create_account?continue=https%3A%2F%2Fdevelopers.kakao.com%2Flogin%3FredirectUrl%3D%2Fapps%2Fnew&lang=en)
