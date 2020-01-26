@@ -107,7 +107,7 @@ Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and fol
 ### Kakao sign in Setup
 Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction (Or see below for Kakao developer settings)
 
-> Note: Kakao is a free chat app platform on Android/iOS. As almost Korean use this app, I recommend implementing this option if you are targeting South Korea as well. Setting up this is quite challenging though.
+> **Note**: Kakao is a free chat app platform on Android/iOS. As almost Korean use this app, I recommend implementing this option if you are targeting South Korea as well. Setting up this is quite challenging though.
 
 You need to create Kakao account first to use Kakao developer kit.
 1. [Create your Kakao account](https://accounts.kakao.com/weblogin/create_account?continue=https%3A%2F%2Fdevelopers.kakao.com%2Flogin%3FredirectUrl%3D%2Fapps%2Fnew&lang=en)
@@ -145,11 +145,12 @@ keytool -exportcert -alias <release_key_alias> -keystore <release_keystore_path>
 <application>
     <!-- 2 -->
     <activity
-        ...
-        android:name=".SampleLoginActivity">
+        android:name="com.kakao.auth.authorization.authcode.KakaoWebViewActivity"
+        android:launchMode="singleTop"
+        android:windowSoftInputMode="adjustResize">
         <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
+            <action android:name="android.intent.action.MAIN"/>
+            <category android:name="android.intent.category.DEFAULT"/>
         </intent-filter>
     </activity>
     <!-- 3 -->
@@ -172,6 +173,29 @@ subprojects {
 #### iOS
 1. [Download sdk](https://developers.kakao.com/sdk/latest-ios-sdk), and follow instruction on [developer page](https://developers.kakao.com/docs/ios). You won't need to read Korean as it is explained with screenshots.
 
+
+#### Firebase Cloud function
+Finally, we need a cloud function which creates custom token with kakao uid. 
+
+```javascript
+const admin = require('firebase-admin');
+admin.initializeApp();
+
+exports.createCustomToken = functions.https.onCall((data, context) => {
+    // Grab uid.
+    const uid = data.uid;
+
+    return admin.auth().createCustomToken(uid)
+      .then(function(customToken) {
+        // Send token back to client
+        return { token : customToken, error : '' };
+    })
+      .catch(function(error) {
+        console.log("Error creating custom token:", error);
+        return { error : error };
+      });
+});
+```
 
 ## Usage
 
