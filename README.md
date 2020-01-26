@@ -106,22 +106,24 @@ Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) packa
 We also need a cloud function which creates custom token with kakao uid. 
 
 ```javascript
-const admin = require('firebase-admin');
+const admin = require("firebase-admin");
 admin.initializeApp();
 
 exports.createCustomToken = functions.https.onCall((data, context) => {
-    // Grab uid.
-    const uid = data.uid;
+  // Grab uid.
+  const uid = data.uid;
 
-    return admin.auth().createCustomToken(uid)
-      .then(function(customToken) {
-        // Send token back to client
-        return { token : customToken, error : '' };
+  return admin
+    .auth()
+    .createCustomToken(uid)
+    .then(function(customToken) {
+      // Send token back to client
+      return { token: customToken, error: "" };
     })
-      .catch(function(error) {
-        console.log("Error creating custom token:", error);
-        return { error : error };
-      });
+    .catch(function(error) {
+      console.log("Error creating custom token:", error);
+      return { error: error };
+    });
 });
 ```
 
