@@ -38,22 +38,16 @@ _handleSignOut() {
 }
 ```
 
-This package has nothing fancy but just do the dirty things for you and what you will have is something like:
+**This package has nothing fancy but just do the dirty things for you and what you will have is something like:**
 
 ```dart
 import 'package:firebase_auth_simplify/firebase_auth_simplify.dart';
-```
 
-and
-
-```dart
 // Google
-FirebaseAuthAPI.signInWith(GoogleSignInAPI())
-    .then((FirebaseUser user) => print(user))
-    .catchError((e) => print(e));
+FirebaseAuthAPI.signInWith(GoogleSignInAPI());
 
 // Facebook
-await FirebaseAuthAPI.signInWith(FacebookSignInAPI());
+FirebaseAuthAPI.signInWith(FacebookSignInAPI());
 
 ...
 ```
@@ -85,6 +79,8 @@ The more caffeine I get, the more useful projects I can make in the future.
 
 
 ## Getting Started
+
+**NOTE: Only setup what you need. No need to configure all of followings**
 
 ### Firebase Auth Setup
 This project uses firebase_auth package and is just a wrapper of it. So please make sure you follow setup instruction of [firebase_auth](https://pub.dev/packages/firebase_auth).
