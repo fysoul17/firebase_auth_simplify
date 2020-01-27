@@ -131,7 +131,7 @@ exports.createCustomToken = functions.https.onCall((data, context) => {
 
 ### Simplest way
 Simply initialize the class you want to sign in for, and call signIn() function.   
-**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because 'firebase_auth' package does not support the function yet. It only provides signOut() function for firebase provided auth such as email.**
+**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because ['firebase_auth' package does not support the function](https://github.com/FirebaseExtended/flutterfire/issues/891) yet. It only provides signOut() function for firebase provided auth such as email.**
 
 ```dart
 // e-mail
