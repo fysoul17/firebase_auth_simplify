@@ -101,9 +101,19 @@ Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and fol
 ### Facebook sign in Setup
 
 ### Kakao sign in Setup
-Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction of creating an app at kakao developer's site and key hash settings. No need to implement Android/iOS specifics such as AndroidManifest.xml or info.plist.
+Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction. Steps are similar to Facebook settings.
 
-We also need a cloud function which creates custom token with kakao uid. 
+1. Create an app at kakao developer portal.
+2. Set key hash in there. 
+
+For Android,
+Set AndroidManfest.xml
+
+For iOS,
+Set info.plist and import SDK into xcode before building.
+
+For Firebase,
+We need a cloud function which creates custom token with kakao uid. 
 
 ```javascript
 const admin = require("firebase-admin");
@@ -126,6 +136,17 @@ exports.createCustomToken = functions.https.onCall((data, context) => {
     });
 });
 ```
+
+If you encounter below error, follow the link and enable API.
+```
+{error: {codePrefix: auth, errorInfo: {code: auth/insufficient-permission, message: Identity and Access Management (IAM) API has not been used in project YOUR_PROJECT_ID before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/iam.googleapis.com/overview?project=YOUR_PROJECT_ID then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.; Please refer to https://firebase.google.com/docs/auth/admin/create-custom-tokens for more details on how to use and troubleshoot this feature.}}}
+```
+
+If you see below error, you also need to set Permission of iam.serviceAccounts.signBolb.
+```
+{error: {codePrefix: auth, errorInfo: {code: auth/insufficient-permission, message: Permission iam.serviceAccounts.signBlob is required to perform this operation on service account projects/-/serviceAccounts/YOUR_PROJECT_NAME@appspot.gserviceaccount.com.; Please refer to https://firebase.google.com/docs/auth/admin/create-custom-tokens for more details on how to use and troubleshoot this feature.}}}
+```
+[Grant permission](https://stackoverflow.com/a/54066988/12567737) in console.
 
 ## Usage
 
