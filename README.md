@@ -52,7 +52,7 @@ FirebaseAuthAPI.signInWith(FacebookSignInAPI());
 ...
 ```
 
-So if your priority is 'simplisity' and 'less code' for 3rd party integration, it is worth using this package.
+So if your priority is 'simplicity' and 'less code' for 3rd party integration, it is worth using this package.
 
 ## Who should consider NOT using this
 Firstly, if your project only uses firebase provided sign-in methods, such as email or phone auth, it is better using [firebase_auth](https://pub.dev/packages/firebase_auth) package directly.
