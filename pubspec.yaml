@@ -1,6 +1,6 @@
 name: firebase_auth_simplify
 description: A high-level framework of Firebase Auth package that wraps several lines of codes to one line in order to easily use sign-in and out function.
-version: 0.0.1
+version: 0.1.0
 homepage: git@github.com:fysoul17/firebase_auth_simplify.git
 
 environment:
@@ -11,8 +11,13 @@ dependencies:
     sdk: flutter
 
   firebase_auth: ^0.15.3+1
+  cloud_functions: ^0.4.1+8
+  firebase_analytics: ^5.0.10 # Without this, flutter_kakao_login will fail.
+
   provider: ^4.0.2
+
   google_sign_in: ^4.1.1
+  flutter_kakao_login: ^0.7.0
 
 dev_dependencies:
   flutter_test:

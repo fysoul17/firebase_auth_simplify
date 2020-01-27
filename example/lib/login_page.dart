@@ -178,7 +178,9 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text("Sign in with Kakao"),
-      onPressed: () {},
+      onPressed: () {
+        _performSignIn(FirebaseKakaoAuthAPI());
+      },
     );
   }
 
