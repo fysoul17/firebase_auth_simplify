@@ -138,7 +138,7 @@ Simply initialize the class you want to sign in for, and call signIn() function.
 FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signUp();
 FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signIn();
 
-// google (This automatically invokes signInSilently() if the user is previously authenticated user)
+// google
 FirebaseGoogleAuthAPI().signIn();
 // or
 FirebaseGoogleAuthAPI(scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly']).signIn();
