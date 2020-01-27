@@ -161,11 +161,17 @@ FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signIn();
 
 // google
 FirebaseGoogleAuthAPI().signIn();
-// or
 FirebaseGoogleAuthAPI(scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly']).signIn();
 
+// Kakao 
+FirebaseKakaoAuthAPI().signIn();
+
+// Facebook
+FirebaseFacebookAuthAPI().signIn();
+
+
 // Singing out using original package of firebase_auth. 
-// However, this will NOT sign out from 3rd party provider
+// IMPORTANT: This will NOT sign out from 3rd party provider
 FirebaseAuth.instance.signOut();
 ```
 
