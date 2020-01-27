@@ -101,7 +101,7 @@ Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and fol
 ### Facebook sign in Setup
 
 ### Kakao sign in Setup
-Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction.
+Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction of creating an app at kakao developer's site. No need to implement Android/iOS specifics such as AndroidManifest.xml or info.plist.
 
 We also need a cloud function which creates custom token with kakao uid. 
 
