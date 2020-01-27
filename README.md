@@ -143,6 +143,9 @@ FirebaseGoogleAuthAPI().signIn();
 // or
 FirebaseGoogleAuthAPI(scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly']).signIn();
 
+// Singing out using original package of firebase_auth. 
+// However, this will NOT sign out from 3rd party provider
+FirebaseAuth.instance.signOut();
 ```
 
 ### Using the wrapper
