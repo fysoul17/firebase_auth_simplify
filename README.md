@@ -80,7 +80,7 @@ The more caffeine I get, the more useful projects I can make in the future.
 
 ## Getting Started
 
-**NOTE: Only setup what you need. No need to configure all of followings**
+> **** **NOTE: Only setup what you need. No need to configure all of followings** ****
 
 ### Firebase Auth Setup
 This project uses firebase_auth package and is just a wrapper of it. So please make sure you follow setup instruction of [firebase_auth](https://pub.dev/packages/firebase_auth).
