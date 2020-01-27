@@ -10,7 +10,7 @@ However, although the most of usecases have almost the same signing-in and out c
 You will basically write some codes like below for **Each** of sign-in methods, and you want to manage it seperatly from the widget you use.
 
 ```dart
-// Example of Google sign in
+// Example of Google sign in (What you will do with original packages)
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
