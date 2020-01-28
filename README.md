@@ -149,10 +149,11 @@ Lastly, as this uses external call, you need to **change your plan to 'Blaze'**.
 
 ## Usage
 
-### Simplest way
+### Simple Sign-up/in/out
 Simply initialize the class you want to sign in for, and call signIn() function.   
-**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because ['firebase_auth' package does not support the function](https://github.com/FirebaseExtended/flutterfire/issues/891) yet. It only provides signOut() function for firebase provided auth such as email.**
+**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because ['firebase_auth' package does not support the function](https://github.com/FirebaseExtended/flutterfire/issues/891) yet. It only provides signOut() function for firebase provided auth such as email. You also have to manage linking option yourself.**
 
+#### Sign-Up / Sign-In
 ```dart
 // e-mail
 FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signUp();
@@ -167,25 +168,35 @@ FirebaseKakaoAuthAPI().signIn();
 
 // Facebook
 FirebaseFacebookAuthAPI().signIn();
+```
 
-
+#### Sign-Out
+```dart
 // Singing out using original package of firebase_auth. 
 // IMPORTANT: This will NOT sign out from 3rd party provider
 FirebaseAuth.instance.signOut();
 ```
 
-### Using the wrapper
-We provide FirebaseAuthProvider so that we can manage a sign-out function for you. 
+### Using the wrapper (Recommended)
+We provide FirebaseAuthProvider so that we can manage sign-out and 3rd party providers' account linking function for you. 
 
+#### Sign-Up / Sign-In
 ```dart
-FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI());
+FirebaseAuthProvider.instance.signUpWith(FirebaseWhateverAuthAPI());    // Only works with firebase provided auth. (eg. email)
+FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI()); 
+```
 
+#### Sign-Out
+``` dart
 // Then you can sign-out anywhere. 
 FirebaseAuthProvider.instance.signOut();
 ```
-  
-**NOTE: Good thing to use this way is it does not only sign out from Firestore, but also sign out from 3rd party provider which we can allow user to sign-in with another account to the same provider**
+**NOTE: Good thing to use this way is it does not only sign out from Firestore, but also sign out from 3rd party provider which we can allow user to sign-in with another account to the same provider. Also, you can manage account linking easily.**
 
+#### Linking
+```dart
+FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseWhateverAuthAPI());
+```
 
 ### Other useful packages you might be instrested
 [Material design Speed Dial](https://pub.dev/packages/flutter_speed_dial_material_design)   
