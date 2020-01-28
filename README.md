@@ -126,7 +126,7 @@ We need a [cloud function](https://pub.dev/packages/cloud_functions) which creat
 4. [Usage of userClaims](https://stackoverflow.com/a/58373886/12567737) at Stackoverflow.
 5. npm install --save request-promise to use 'request-promise module' 
 
-**Note: Either using config.json file of using config 'firebase functions:config:set kakao.appid=your_kakao_app_id' for cloud function is recommended instead of coding it directely into cloud function code.   
+**Note: Either using config.json file or using config 'firebase functions:config:set kakao.appid=your_kakao_app_id' for cloud function is recommended instead of coding it directely into cloud function code.   
 Then, you can decalre like:**
 ```
 const kakaoId = require("./config.json");
