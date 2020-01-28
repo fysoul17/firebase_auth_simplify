@@ -125,6 +125,7 @@ We need a [cloud function](https://pub.dev/packages/cloud_functions) which creat
 3. [Improved implementation](https://github.com/CoderSpinoza/custom-auth-samples/blob/kakao/update-versions/kakao/KakaoLoginServer/app.js) by CorderSpinoza at github.
 4. [Usage of userClaims](https://stackoverflow.com/a/58373886/12567737) at Stackoverflow.
 5. npm install --save request request-promise to use 'request-promise module' 
+6. **IMPORTANT: Make sure to call 'createCustomToken' with { provider: "kakaocorp.com" } at 2nd parameter. If not, you won't be able to call sign-out for it.**
 
 **Note: Either using config.json file or using config 'firebase functions:config:set kakao.appid=your_kakao_app_id' for cloud function is recommended instead of coding it directely into cloud function code.   
 Then, you can decalre like:**
