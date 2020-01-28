@@ -13,8 +13,19 @@ class FirebaseAuthProvider {
 
   Stream<FirebaseUser> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged;
 
-  Future<FirebaseUser> currentUser() async {
-    return await _firebaseAuth.currentUser();
+  Future<FirebaseUser> currentUser() {
+    return _firebaseAuth.currentUser();
+  }
+
+  Future<Map<dynamic, dynamic>> getUserClaim() async {
+    try {
+      FirebaseUser user = await currentUser();
+      final IdTokenResult idToken = await user.getIdToken(refresh: true);
+      print(idToken.claims);
+      return idToken.claims;
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   BaseAuthAPI _primaryAuth;
@@ -34,25 +45,55 @@ class FirebaseAuthProvider {
 
   Future<void> signOut() async {
     try {
-      FirebaseUser user = await currentUser();
+      // Previously signed-in before re-launching the app. So there is no _primaryAuth set. Need to find out how it is signed-in in order to sign-out properly.
       if (_primaryAuth == null) {
-        for (UserInfo userInfo in user.providerData) {
-          print(userInfo.providerId);
-
-          if (userInfo.providerId == "facebook.com") {
-            //
-          } else if (userInfo.providerId == "google.com") {
-            _primaryAuth = FirebaseGoogleAuthAPI();
-          }
-        }
+        _primaryAuth = await getAuthFromClaims();
       }
 
       await _firebaseAuth.signOut();
 
+      // If provider is firebase, we don't need to sign-out anymore.
       if (_primaryAuth is FirebaseEmailAuthAPI) return;
 
       // If primary sign in provider is not firebase, we should do manually for them.
       await _primaryAuth.signOut();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<BaseAuthAPI> getAuthFromClaims() async {
+    try {
+      BaseAuthAPI api;
+      var userClaims = await getUserClaim();
+      final String providerId = userClaims['firebase']['sign_in_provider'];
+
+      if (providerId == "google.com") {
+        api = FirebaseGoogleAuthAPI();
+      } else if (providerId == "facebook.com") {
+        api = FirebaseFacebookAuthAPI();
+      }
+      // Custom providers (providerId == "custom")
+      else {
+        if (userClaims['provider'] == "kakaocorp.com") {
+          api = FirebaseKakaoAuthAPI();
+        } else {
+          // TBA. (eg. Link, Apple, etc..)
+          api = null;
+        }
+      }
+      return api;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  /// This will link the provided auth with currently signed-in user's account.
+  /// If there is no previously signed-in user, this will throw an exception.
+  Future<void> linkCurrentUserWith(BaseAuthAPI api) async {
+    try {
+      FirebaseUser prevUser = await currentUser();
+      return await api.linkWith(prevUser);
     } catch (e) {
       return Future.error(e);
     }

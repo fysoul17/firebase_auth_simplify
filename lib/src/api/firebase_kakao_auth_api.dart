@@ -8,23 +8,19 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   FirebaseKakaoAuthAPI();
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static const String providerId = 'kakaocorp.com';
 
-  final FlutterKakaoLogin _kakaoSignIn = FlutterKakaoLogin();
+  FlutterKakaoLogin _kakaoSignIn = FlutterKakaoLogin();
 
   @override
   Future<AuthResult> signIn() async {
-    final KakaoLoginResult kakaoResult = await _kakaoSignIn.logIn();
-
     try {
-      final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'createCustomToken')..timeout = const Duration(seconds: 30);
+      final KakaoLoginResult kakaoResult = await _signInProvider();
+      if (kakaoResult.errorMessage != null && kakaoResult.errorMessage.isNotEmpty) {
+        return Future.error(PlatformException(code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
+      }
 
-      final HttpsCallableResult result = await callable.call(
-        <String, dynamic>{
-          'uid': kakaoResult.account.userID,
-        },
-      );
-
-      final authResult = await _firebaseAuth.signInWithCustomToken(token: result.data['token']);
+      final authResult = await _firebaseAuth.signInWithCustomToken(token: await _verifyToken(await _getAccessToken()));
 
       // When sign in is done, update email info.
       if (kakaoResult.account.userEmail.isNotEmpty) {
@@ -33,19 +29,80 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
       return authResult;
     } catch (e) {
-      print(e);
       return Future.error(e);
     }
   }
 
-  /// Google API does not need sign up.
+  Future<KakaoLoginResult> _signInProvider() async {
+    return await _kakaoSignIn.logIn();
+  }
+
+  Future<String> _getAccessToken() async {
+    final KakaoAccessToken accessToken = await (_kakaoSignIn.currentAccessToken);
+    if (accessToken == null) {
+      return Future.error(PlatformException(code: "KAKAO_ACCESSTOKEN_ERROR", message: "Failed to get access token from Kakao"));
+    } else {
+      return accessToken.token;
+    }
+  }
+
+  Future<String> _verifyToken(String kakaoToken) async {
+    try {
+      final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'verifyKakaoToken')..timeout = const Duration(seconds: 30);
+
+      final HttpsCallableResult result = await callable.call(
+        <String, dynamic>{
+          'token': kakaoToken,
+        },
+      );
+
+      if (result.data['error'] != null) {
+        return Future.error(result.data['error']);
+      } else {
+        return result.data['token'];
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  /// Kakao API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION_EXCEPTION", message: "Google Signin does not need sign up.");
+    return Future.error(PlatformException(code: "UNSUPPORTED_FUNCTION_EXCEPTION", message: "Google Signin does not need sign up."));
   }
 
   @override
   Future<void> signOut() {
+    _kakaoSignIn ??= FlutterKakaoLogin();
     return _kakaoSignIn.logOut();
+  }
+
+  @override
+  Future<FirebaseUser> linkWith(FirebaseUser user) async {
+    try {
+      final KakaoLoginResult kakaoResult = await _signInProvider();
+      if (kakaoResult.errorMessage != null && kakaoResult.errorMessage.isNotEmpty) {
+        return Future.error(PlatformException(code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
+      }
+
+      var kakaoToken = await _getAccessToken();
+
+      final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'linkWithKakao')..timeout = const Duration(seconds: 30);
+
+      final HttpsCallableResult result = await callable.call(
+        <String, dynamic>{
+          'token': kakaoToken,
+        },
+      );
+
+      if (result.data['error'] != null) {
+        return Future.error(result.data['error']);
+      } else {
+        return _firebaseAuth.currentUser();
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 }

@@ -4,4 +4,5 @@ abstract class BaseAuthAPI {
   Future<AuthResult> signUp();
   Future<AuthResult> signIn();
   Future<void> signOut();
+  Future<FirebaseUser> linkWith(FirebaseUser user);
 }

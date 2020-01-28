@@ -168,7 +168,9 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Text("Sign in with Facebook"),
-      onPressed: () {},
+      onPressed: () {
+        _performSignIn(FirebaseFacebookAuthAPI());
+      },
     );
   }
 
@@ -189,6 +191,9 @@ class _LoginPageState extends State<LoginPage> {
       await FirebaseAuthProvider.instance.signInWith(api);
     } on PlatformException catch (e) {
       print("platform exception: $e");
+      if (e.code == "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL") {
+        print("ALERT USER! or Link");
+      }
     } catch (e) {
       print("other exceptions: $e");
     }
