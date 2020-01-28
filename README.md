@@ -119,7 +119,7 @@ For iOS,
 Set info.plist and import SDK into xcode before building.
 
 For Firebase,
-We need a [cloud function](https://pub.dev/packages/cloud_functions) which creates custom token with kakao uid. Please refer to below documents.
+We need a [cloud function](https://pub.dev/packages/cloud_functions) which creates custom token with kakao access token. Please refer to below documents.
 1. [Issue ticket](https://github.com/FirebaseExtended/custom-auth-samples/issues/10) at FirebaseExtended github.
 2. [Basic implementation](https://github.com/FirebaseExtended/custom-auth-samples/blob/master/kakao/KakaoLoginServer/app.js) at FirebaseExtended github.
 3. [Improved implementation](https://github.com/CoderSpinoza/custom-auth-samples/blob/kakao/update-versions/kakao/KakaoLoginServer/app.js) by CorderSpinoza at github.
