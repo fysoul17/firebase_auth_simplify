@@ -130,7 +130,7 @@ We need a [cloud function](https://pub.dev/packages/cloud_functions) which creat
 Then, you can decalre like:**
 ```
 const kakaoId = require("./config.json");
-const kakaoId = functions.config().kakao.appid**
+const kakaoId = functions.config().kakao.appid;
 ```
 
 If you encounter below error, follow the link and enable API.
