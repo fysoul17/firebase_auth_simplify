@@ -119,29 +119,11 @@ For iOS,
 Set info.plist and import SDK into xcode before building.
 
 For Firebase,
-We need a cloud function which creates custom token with kakao uid. 
-
-```javascript
-const admin = require("firebase-admin");
-admin.initializeApp();
-
-exports.createCustomToken = functions.https.onCall((data, context) => {
-  // Grab uid.
-  const uid = data.uid;
-
-  return admin
-    .auth()
-    .createCustomToken(uid)
-    .then(function(customToken) {
-      // Send token back to client
-      return { token: customToken, error: "" };
-    })
-    .catch(function(error) {
-      console.log("Error creating custom token:", error);
-      return { error: error };
-    });
-});
-```
+We need a [cloud function](https://pub.dev/packages/cloud_functions) which creates custom token with kakao uid. Please refer to below documents.
+1. [Issue ticket](https://github.com/FirebaseExtended/custom-auth-samples/issues/10) at FirebaseExtended github.
+2. [Actual implementation](https://github.com/FirebaseExtended/custom-auth-samples/blob/master/kakao/KakaoLoginServer/app.js) at FirebaseExtended github.
+3. [Improved implementation](https://github.com/CoderSpinoza/custom-auth-samples/blob/kakao/update-versions/kakao/KakaoLoginServer/app.js) by CorderSpinoza at github.
+4. [Usage of userClaims](https://stackoverflow.com/a/58373886/12567737) at Stackoverflow.
 
 If you encounter below error, follow the link and enable API.
 ```
