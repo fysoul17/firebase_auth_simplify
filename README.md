@@ -144,7 +144,7 @@ If you see below error, you also need to set Permission of iam.serviceAccounts.s
 ```
 [Grant permission](https://stackoverflow.com/a/54066988/12567737) in console.
 
-Lastly, as this uses external call, you need to change your plan to 'Blaze'. Otherwise, you will get 500 error.
+Lastly, as this uses external call, you need to **change your plan to 'Blaze'**. Otherwise, you will get 500 error.
 
 ## Usage
 
