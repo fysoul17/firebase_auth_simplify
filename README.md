@@ -124,7 +124,7 @@ We need a [cloud function](https://pub.dev/packages/cloud_functions) which creat
 2. [Basic implementation](https://github.com/FirebaseExtended/custom-auth-samples/blob/master/kakao/KakaoLoginServer/app.js) at FirebaseExtended github.
 3. [Improved implementation](https://github.com/CoderSpinoza/custom-auth-samples/blob/kakao/update-versions/kakao/KakaoLoginServer/app.js) by CorderSpinoza at github.
 4. [Usage of userClaims](https://stackoverflow.com/a/58373886/12567737) at Stackoverflow.
-5. npm install --save request-promise to use 'request-promise module' 
+5. npm install --save request request-promise to use 'request-promise module' 
 
 **Note: Either using config.json file or using config 'firebase functions:config:set kakao.appid=your_kakao_app_id' for cloud function is recommended instead of coding it directely into cloud function code.   
 Then, you can decalre like:**
@@ -143,6 +143,8 @@ If you see below error, you also need to set Permission of iam.serviceAccounts.s
 {error: {codePrefix: auth, errorInfo: {code: auth/insufficient-permission, message: Permission iam.serviceAccounts.signBlob is required to perform this operation on service account projects/-/serviceAccounts/YOUR_PROJECT_NAME@appspot.gserviceaccount.com.; Please refer to https://firebase.google.com/docs/auth/admin/create-custom-tokens for more details on how to use and troubleshoot this feature.}}}
 ```
 [Grant permission](https://stackoverflow.com/a/54066988/12567737) in console.
+
+Lastly, as this uses external call, you need to change your plan to 'Blaze'. Otherwise, you will get 500 error.
 
 ## Usage
 
