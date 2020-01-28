@@ -125,6 +125,9 @@ We need a [cloud function](https://pub.dev/packages/cloud_functions) which creat
 3. [Improved implementation](https://github.com/CoderSpinoza/custom-auth-samples/blob/kakao/update-versions/kakao/KakaoLoginServer/app.js) by CorderSpinoza at github.
 4. [Usage of userClaims](https://stackoverflow.com/a/58373886/12567737) at Stackoverflow.
 
+**Note: Either using config.json file of using config 'firebase functions:config:set kakao.appid=your_kakao_app_id' for cloud function is recommended instead of coding it directely into cloud function code. Then, you can decalre like: const kakaoId = require("./myKey.json") or const kakaoId = functions.config().kakao_appid**
+
+
 If you encounter below error, follow the link and enable API.
 ```
 {error: {codePrefix: auth, errorInfo: {code: auth/insufficient-permission, message: Identity and Access Management (IAM) API has not been used in project YOUR_PROJECT_ID before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/iam.googleapis.com/overview?project=YOUR_PROJECT_ID then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.; Please refer to https://firebase.google.com/docs/auth/admin/create-custom-tokens for more details on how to use and troubleshoot this feature.}}}
