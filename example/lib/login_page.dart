@@ -14,6 +14,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,19 +56,29 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 50),
-              _emailSignInButton(context),
-              _phoneSignInField(context),
-              _googleSignInButton(),
-              _facebookSignInButton(),
-              _kakaoSignInButton(),
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: _isLoading
+                  ? <Widget>[
+                      _buildLoadingIndicator(),
+                    ]
+                  : <Widget>[
+                      _emailSignInButton(context),
+                      _phoneSignInField(context),
+                      _googleSignInButton(),
+                      _facebookSignInButton(),
+                      _kakaoSignInButton(),
+                    ]),
         ),
       ),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return SizedBox(
+      child: CircularProgressIndicator(),
+      height: 25,
+      width: 25,
     );
   }
 
@@ -99,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                           labelText: "e-mail"),
                       keyboardType: TextInputType.emailAddress,
                       onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false).email = text;
+                        UserCredentialProvider.of(context, listen: false).email = text.trimRight();
                       },
                     ),
                   ),
@@ -116,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       obscureText: true,
                       onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false).password = text;
+                        UserCredentialProvider.of(context, listen: false).password = text.trimRight();
                       },
                     ),
                   ),
@@ -187,6 +199,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _performSignIn(BaseAuthAPI api) async {
+    setState(() {
+      _isLoading = true;
+    });
+
     try {
       await FirebaseAuthProvider.instance.signInWith(api);
     } on PlatformException catch (e) {
@@ -196,6 +212,12 @@ class _LoginPageState extends State<LoginPage> {
       }
     } catch (e) {
       print("other exceptions: $e");
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

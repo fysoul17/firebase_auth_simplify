@@ -1,3 +1,11 @@
+## [0.3.3] - 29/Jan/2020
+
+- Fixed bug that Kakao sign-in links automatically with existing e-mail. It will throw an error and only can be linked by using link function.
+- Kakao sign-in will throw a new exception in regards to above issue.
+- Added try-catch block for email authentication. It will now catch error correctly.
+- Fixed bug at example code. It will now trim the white space before sending to the server.
+- Fixed bug at example code. Sign-in/out dialog will be disappear as expected when sign-in/out is succeeded.
+
 ## [0.3.2] - 29/Jan/2020
 
 - Minor bug fix

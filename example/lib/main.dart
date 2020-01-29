@@ -47,13 +47,13 @@ class AppPage extends StatelessWidget {
             return LandingPage();
           }
         } else {
-          return _buildProgressIndicator();
+          return _buildLoadingIndicator();
         }
       },
     );
   }
 
-  Widget _buildProgressIndicator() {
+  Widget _buildLoadingIndicator() {
     return Center(
       child: SizedBox(
         child: CircularProgressIndicator(),

@@ -104,7 +104,8 @@ function getUser(kakaoUserId, email, emailVerified) {
           if (!emailVerified) {
             throw new Error("This user should authenticate first with other providers");
           }
-          return userRecord;
+
+          throw new Error("The email address is already in use by another account.");
         });
     });
 }

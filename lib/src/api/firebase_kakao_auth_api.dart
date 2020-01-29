@@ -29,6 +29,9 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
       return authResult;
     } catch (e) {
+      if (e.toString().contains("already in use")) {
+        return Future.error(PlatformException(code: "ERROR_EMAIL_ALREADY_IN_USE", message: "The email address is already in use by another account"));
+      }
       return Future.error(e);
     }
   }
