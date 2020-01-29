@@ -54,7 +54,7 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
   /// Google API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION_EXCEPTION", message: "Google Signin does not need sign up.");
+    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Google Signin does not need sign up.");
   }
 
   @override

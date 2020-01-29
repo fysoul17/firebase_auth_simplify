@@ -15,7 +15,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   @override
   Future<AuthResult> signIn() async {
     try {
-      final KakaoLoginResult kakaoResult = await _signInProvider();
+      final KakaoLoginResult kakaoResult = await _kakaoSignIn.logIn();
       if (kakaoResult.errorMessage != null && kakaoResult.errorMessage.isNotEmpty) {
         return Future.error(PlatformException(code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
       }
@@ -31,10 +31,6 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
     } catch (e) {
       return Future.error(e);
     }
-  }
-
-  Future<KakaoLoginResult> _signInProvider() async {
-    return await _kakaoSignIn.logIn();
   }
 
   Future<String> _getAccessToken() async {
@@ -69,7 +65,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   /// Kakao API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    return Future.error(PlatformException(code: "UNSUPPORTED_FUNCTION_EXCEPTION", message: "Google Signin does not need sign up."));
+    return Future.error(PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Google Signin does not need sign up."));
   }
 
   @override
@@ -81,7 +77,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   @override
   Future<FirebaseUser> linkWith(FirebaseUser user) async {
     try {
-      final KakaoLoginResult kakaoResult = await _signInProvider();
+      final KakaoLoginResult kakaoResult = await _kakaoSignIn.logIn();
       if (kakaoResult.errorMessage != null && kakaoResult.errorMessage.isNotEmpty) {
         return Future.error(PlatformException(code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
       }

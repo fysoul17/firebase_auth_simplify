@@ -42,9 +42,9 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
     final FacebookLoginResult result = await _signInProvider();
 
     if (result.status == FacebookLoginStatus.cancelledByUser) {
-      return Future.error(PlatformException(code: "CANCELLED_BY_USER", message: "Facebook sign-in is cancelled by user."));
+      return Future.error(PlatformException(code: "FACEBOOK_CANCELLED_BY_USER", message: "Facebook sign-in is cancelled by user."));
     } else if (result.status == FacebookLoginStatus.error) {
-      return Future.error(PlatformException(code: "SIGN_IN_ERROR", message: result.errorMessage));
+      return Future.error(PlatformException(code: "FACEBOOK_SIGN_IN_FAILED", message: result.errorMessage));
     }
 
     token = result.accessToken.token;
@@ -81,6 +81,6 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   /// Facebook API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION_EXCEPTION", message: "Google Signin does not need sign up.");
+    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Google Signin does not need sign up.");
   }
 }
