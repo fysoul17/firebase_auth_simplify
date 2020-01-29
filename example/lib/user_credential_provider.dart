@@ -18,4 +18,18 @@ class UserCredentialProvider extends ChangeNotifier {
     _password = pw;
     notifyListeners();
   }
+
+  String _phoneNumber;
+  String get phoneNumber => _phoneNumber;
+  set phoneNumber(String phoneNumber) {
+    _phoneNumber = phoneNumber;
+    notifyListeners();
+  }
+
+  String _code;
+  String get code => _code;
+  set code(String code) {
+    _code = code;
+    notifyListeners();
+  }
 }

@@ -1,3 +1,9 @@
+## [0.4.0] - 29/Jan/2020
+
+- Added Phone authentication
+- Added Phone authentication example
+- Added assertion for sign-in logic
+
 ## [0.3.3] - 29/Jan/2020
 
 - Fixed bug that Kakao sign-in links automatically with existing e-mail. It will throw an error and only can be linked by using link function.

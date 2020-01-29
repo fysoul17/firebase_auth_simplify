@@ -24,6 +24,9 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signIn() async {
     try {
       final authResult = await _firebaseAuth.signInWithCredential(await _getCredential());
+      final FirebaseUser user = authResult.user;
+      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+      assert(user.uid == currentUser.uid);
 
       // When sign in is done, update email info.
       final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=email&access_token=$token');

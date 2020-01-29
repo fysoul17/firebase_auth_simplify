@@ -15,6 +15,10 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signIn() async {
     try {
       final authResult = await _firebaseAuth.signInWithCredential(await _getCredential());
+      final FirebaseUser user = authResult.user;
+      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+      assert(user.uid == currentUser.uid);
+
       // When sign in is done, update email info.
       authResult.user.updateEmail(account.email);
 

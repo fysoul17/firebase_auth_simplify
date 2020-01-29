@@ -15,9 +15,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
+  final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
 
   @override
   Widget build(BuildContext context) {
+    print(">>>  Build Login Page");
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -64,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                     ]
                   : <Widget>[
                       _emailSignInButton(context),
-                      _phoneSignInField(context),
+                      _phoneSignInButton(context),
                       _googleSignInButton(),
                       _facebookSignInButton(),
                       _kakaoSignInButton(),
@@ -136,8 +138,8 @@ class _LoginPageState extends State<LoginPage> {
                   RaisedButton(
                     child: Text("Sign in"),
                     onPressed: () async {
-                      UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
-                      FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                      final FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
                       bool succeed = await _performSignIn(api);
                       if (succeed) Navigator.of(context).pop();
                     },
@@ -145,8 +147,8 @@ class _LoginPageState extends State<LoginPage> {
                   RaisedButton(
                     child: Text("Create New Account"),
                     onPressed: () async {
-                      UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
-                      FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                      final FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
                       bool succeed = await _createAccount(api);
                       if (succeed) Navigator.of(context).pop();
                     },
@@ -160,8 +162,80 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _phoneSignInField(BuildContext context) {
-    return Container();
+  Widget _phoneSignInButton(BuildContext context) {
+    return RaisedButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Text("Sign in with Phone / or Verification"),
+      onPressed: () {
+        showDialog(
+          context: context,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Container(
+              height: 300,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey[700]),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          hintText: "+11 123-456-7890",
+                          labelText: "Phone Number"),
+                      keyboardType: TextInputType.phone,
+                      onChanged: (text) {
+                        UserCredentialProvider.of(context, listen: false).phoneNumber = text.trim();
+                      },
+                    ),
+                  ),
+                  RaisedButton(
+                    child: Text("Send Code"),
+                    onPressed: () async {
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                      phoneAuthAPI.verifyNumber(provider.phoneNumber);
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey[700]),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        hintText: "123456",
+                        labelText: "Code",
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (text) {
+                        UserCredentialProvider.of(context, listen: false).code = text.trim();
+                      },
+                    ),
+                  ),
+                  RaisedButton(
+                    child: Text("Verify"),
+                    onPressed: () async {
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                      final result = await phoneAuthAPI.submitVerificationCode(provider.code);
+                      bool succeed = result != null;
+                      if (succeed) Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Widget _googleSignInButton() {

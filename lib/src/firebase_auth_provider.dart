@@ -53,7 +53,7 @@ class FirebaseAuthProvider {
       await _firebaseAuth.signOut();
 
       // If provider is firebase, we don't need to sign-out anymore.
-      if (_primaryAuth is FirebaseEmailAuthAPI) return;
+      if (_primaryAuth is FirebaseEmailAuthAPI || _primaryAuth is FirebasePhoneAuthAPI) return;
 
       // If primary sign in provider is not firebase, we should do manually for them.
       await _primaryAuth.signOut();

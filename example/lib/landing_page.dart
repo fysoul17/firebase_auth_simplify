@@ -11,6 +11,7 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
+    print(">>>  Build Landing Page");
     return Center(
       child: Container(
           child: Column(

@@ -28,7 +28,12 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signIn() async {
     print("sign in with $email and $password");
     try {
-      return await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      final authResult = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      final FirebaseUser user = authResult.user;
+      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+      assert(user.uid == currentUser.uid);
+
+      return authResult;
     } catch (e) {
       return Future.error(e);
     }

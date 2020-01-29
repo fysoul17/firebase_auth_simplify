@@ -22,6 +22,10 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
       final authResult = await _firebaseAuth.signInWithCustomToken(token: await _verifyToken(await _getAccessToken()));
 
+      final FirebaseUser user = authResult.user;
+      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
+      assert(user.uid == currentUser.uid);
+
       // When sign in is done, update email info.
       if (kakaoResult.account.userEmail.isNotEmpty) {
         authResult.user.updateEmail(kakaoResult.account.userEmail);
