@@ -135,18 +135,20 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(height: 5),
                   RaisedButton(
                     child: Text("Sign in"),
-                    onPressed: () {
+                    onPressed: () async {
                       UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
                       FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
-                      _performSignIn(api);
+                      bool succeed = await _performSignIn(api);
+                      if (succeed) Navigator.of(context).pop();
                     },
                   ),
                   RaisedButton(
                     child: Text("Create New Account"),
-                    onPressed: () {
+                    onPressed: () async {
                       UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
                       FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
-                      _createAccount(api);
+                      bool succeed = await _createAccount(api);
+                      if (succeed) Navigator.of(context).pop();
                     },
                   )
                 ],
@@ -199,19 +201,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _performSignIn(BaseAuthAPI api) async {
+    bool succeed = false;
+
     setState(() {
       _isLoading = true;
     });
 
     try {
       await FirebaseAuthProvider.instance.signInWith(api);
+      succeed = true;
     } on PlatformException catch (e) {
       print("platform exception: $e");
-      if (e.code == "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL") {
-        print("ALERT USER! or Link");
-      }
+      final snackBar = SnackBar(content: Text(e.message));
+      Scaffold.of(context).showSnackBar(snackBar);
     } catch (e) {
       print("other exceptions: $e");
+      final snackBar = SnackBar(content: Text(e.message));
+      Scaffold.of(context).showSnackBar(snackBar);
     }
 
     if (mounted) {
@@ -219,15 +225,22 @@ class _LoginPageState extends State<LoginPage> {
         _isLoading = false;
       });
     }
+
+    return succeed;
   }
 
   _createAccount(BaseAuthAPI api) async {
+    bool succeed = false;
+
     try {
       await FirebaseAuthProvider.instance.signUpWith(api);
+      succeed = true;
     } on PlatformException catch (e) {
       print("platform exception: $e");
     } catch (e) {
       print("other exceptions: $e");
     }
+
+    return succeed;
   }
 }

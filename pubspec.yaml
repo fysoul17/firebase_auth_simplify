@@ -19,7 +19,7 @@ dependencies:
   google_sign_in: ^4.1.1
   flutter_kakao_login: ^0.7.0
   flutter_facebook_login: ^3.0.0
-  http: ^0.12.0+4 # Used for fetching profiles for Facebook GraphAPI
+  http: ^0.12.0+4 # Used for fetching profiles from Facebook GraphAPI
 
 dev_dependencies:
   flutter_test:
