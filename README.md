@@ -74,6 +74,7 @@ Secondly, as this package includes several 3rd party sign-ins, such as google, f
 - [ ] Twitter
 - [ ] Github
 - [ ] Line
+- [ ] Local (Biometric) auth (TouchID, FaceID)
 
 ## Support
 If the package was useful or saved your time, please do not hesitate to buy me a cup of coffee! ;)  
