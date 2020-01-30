@@ -1,7 +1,7 @@
 name: firebase_auth_simplify
 description: A high-level framework of Firebase Auth package that wraps several lines of codes to one line in order to easily use sign-in and out function.
 version: 0.4.1
-homepage: git@github.com:fysoul17/firebase_auth_simplify.git
+homepage: https://github.com/fysoul17/firebase_auth_simplify
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
