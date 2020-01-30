@@ -84,7 +84,16 @@ The more caffeine I get, the more useful projects I can make in the future.
 
 ## Getting Started
 
-> **** **NOTE: Only setup what you need. No need to configure all of followings** ****
+> **NOTE: Only setup what you need. No need to configure all of followings**
+>      
+> IF you encounter app crashes, you must [configure Facebook setting](https://pub.dev/packages/flutter_facebook_login).
+> ```
+> Caused by com.facebook.FacebookSdkNotInitializedException
+> The SDK has not been initialized, make sure to call FacebookSdk.sdkInitialize() first.
+> ```
+>
+> The crash is happening because facebook auth package checkes the app id even if you do not use it and throws an exception when it is not set properly.
+> 
 
 ### Firebase Auth Setup
 This project uses firebase_auth package and is just a wrapper of it. So please make sure you follow setup instruction of [firebase_auth](https://pub.dev/packages/firebase_auth).
