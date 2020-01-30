@@ -2,6 +2,9 @@
 
 A high-level framework of Firebase Auth package that wraps several lines of codes to one line in order to easily use sign-in function.
 
+![](screenshots/signin.PNG)
+![](screenshots/link.PNG)
+
 ## Why/Who should use this
 
 You may want to use [firebase_auth](https://pub.dev/packages/firebase_auth) package directly if you need specific customization on sign-in/out logic.      
@@ -145,7 +148,7 @@ If you see below error, you also need to set Permission of iam.serviceAccounts.s
 ```
 [Grant permission](https://stackoverflow.com/a/54066988/12567737) in console.
 
-Lastly, as this uses external call, you need to **change your plan to 'Blaze'**. Otherwise, you will get 500 error.
+Lastly, as this uses external request, you need to **change your plan to 'Blaze'**. Otherwise, you will get 500 error.
 
 ## Usage
 
@@ -162,8 +165,8 @@ FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signIn();
 // phone auth
 FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
 phoneAuthAPI.verifyNumber(provider.phoneNumber, ....);
-phoneAuthAPI.submitVerificationCode(provider.code);
-FirebaseAuthProvider.instance.signInWith(phoneAuthAPI);
+phoneAuthAPI.submitVerificationCode(code);
+phoneAuthAPI.signIn();
 
 // google
 FirebaseGoogleAuthAPI().signIn();
@@ -197,6 +200,7 @@ FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI());
 FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
 phoneAuthAPI.verifyNumber(provider.phoneNumber, ....);
 phoneAuthAPI.submitVerificationCode(provider.code);
+
 FirebaseAuthProvider.instance.signInWith(phoneAuthAPI);
 ```
 
@@ -217,6 +221,7 @@ FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseWhateverAuthAPI());
 final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI(); // Initialize first
 phoneAuthAPI.verifyNumber(provider.phoneNumber, ......);          // Send phone number to get code
 phoneAuthAPI.submitVerificationCode(code);                        // Submit the 6 digit code
+
 FirebaseAuthProvider.instance.linkCurrentUserWith(phoneAuthAPI);  // Then try link (Will get ERROR_INVALID_VERIFICATION_CODE exception if code is wrong)
 ```
 
