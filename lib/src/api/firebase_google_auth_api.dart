@@ -14,7 +14,8 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
   @override
   Future<AuthResult> signIn() async {
     try {
-      final authResult = await _firebaseAuth.signInWithCredential(await _getCredential());
+      final authResult =
+          await _firebaseAuth.signInWithCredential(await _getCredential());
       final FirebaseUser user = authResult.user;
       final FirebaseUser currentUser = await _firebaseAuth.currentUser();
       assert(user.uid == currentUser.uid);
@@ -30,7 +31,8 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
 
   Future<AuthCredential> _getCredential() async {
     try {
-      _googleSignIn = scopes == null ? GoogleSignIn() : GoogleSignIn(scopes: scopes);
+      _googleSignIn =
+          scopes == null ? GoogleSignIn() : GoogleSignIn(scopes: scopes);
 
       // NOTE: signIn() does the work automatically.
       // GoogleSignInAccount account = await _googleSignIn.signInSilently();
@@ -58,7 +60,9 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
   /// Google API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Google Signin does not need sign up.");
+    throw PlatformException(
+        code: "UNSUPPORTED_FUNCTION",
+        message: "Google Signin does not need sign up.");
   }
 
   @override

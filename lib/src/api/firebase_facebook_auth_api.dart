@@ -23,13 +23,15 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   @override
   Future<AuthResult> signIn() async {
     try {
-      final authResult = await _firebaseAuth.signInWithCredential(await _getCredential());
+      final authResult =
+          await _firebaseAuth.signInWithCredential(await _getCredential());
       final FirebaseUser user = authResult.user;
       final FirebaseUser currentUser = await _firebaseAuth.currentUser();
       assert(user.uid == currentUser.uid);
 
       // When sign in is done, update email info.
-      final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=email&access_token=$token');
+      final graphResponse = await http.get(
+          'https://graph.facebook.com/v2.12/me?fields=email&access_token=$token');
       final profile = jsonDecode(graphResponse.body);
 
       authResult.user.updateEmail(profile['email']);
@@ -45,9 +47,12 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
     final FacebookLoginResult result = await _signInProvider();
 
     if (result.status == FacebookLoginStatus.cancelledByUser) {
-      return Future.error(PlatformException(code: "FACEBOOK_CANCELLED_BY_USER", message: "Facebook sign-in is cancelled by user."));
+      return Future.error(PlatformException(
+          code: "FACEBOOK_CANCELLED_BY_USER",
+          message: "Facebook sign-in is cancelled by user."));
     } else if (result.status == FacebookLoginStatus.error) {
-      return Future.error(PlatformException(code: "FACEBOOK_SIGN_IN_FAILED", message: result.errorMessage));
+      return Future.error(PlatformException(
+          code: "FACEBOOK_SIGN_IN_FAILED", message: result.errorMessage));
     }
 
     token = result.accessToken.token;
@@ -84,6 +89,8 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   /// Facebook API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Google Signin does not need sign up.");
+    throw PlatformException(
+        code: "UNSUPPORTED_FUNCTION",
+        message: "Google Signin does not need sign up.");
   }
 }

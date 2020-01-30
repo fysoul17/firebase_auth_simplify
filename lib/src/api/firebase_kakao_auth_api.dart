@@ -16,11 +16,14 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signIn() async {
     try {
       final KakaoLoginResult kakaoResult = await _kakaoSignIn.logIn();
-      if (kakaoResult.errorMessage != null && kakaoResult.errorMessage.isNotEmpty) {
-        return Future.error(PlatformException(code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
+      if (kakaoResult.errorMessage != null &&
+          kakaoResult.errorMessage.isNotEmpty) {
+        return Future.error(PlatformException(
+            code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
       }
 
-      final authResult = await _firebaseAuth.signInWithCustomToken(token: await _verifyToken(await _getAccessToken()));
+      final authResult = await _firebaseAuth.signInWithCustomToken(
+          token: await _verifyToken(await _getAccessToken()));
 
       final FirebaseUser user = authResult.user;
       final FirebaseUser currentUser = await _firebaseAuth.currentUser();
@@ -34,16 +37,21 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       return authResult;
     } catch (e) {
       if (e.toString().contains("already in use")) {
-        return Future.error(PlatformException(code: "ERROR_EMAIL_ALREADY_IN_USE", message: "The email address is already in use by another account"));
+        return Future.error(PlatformException(
+            code: "ERROR_EMAIL_ALREADY_IN_USE",
+            message: "The email address is already in use by another account"));
       }
       return Future.error(e);
     }
   }
 
   Future<String> _getAccessToken() async {
-    final KakaoAccessToken accessToken = await (_kakaoSignIn.currentAccessToken);
+    final KakaoAccessToken accessToken =
+        await (_kakaoSignIn.currentAccessToken);
     if (accessToken == null) {
-      return Future.error(PlatformException(code: "KAKAO_ACCESSTOKEN_ERROR", message: "Failed to get access token from Kakao"));
+      return Future.error(PlatformException(
+          code: "KAKAO_ACCESSTOKEN_ERROR",
+          message: "Failed to get access token from Kakao"));
     } else {
       return accessToken.token;
     }
@@ -51,7 +59,9 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
   Future<String> _verifyToken(String kakaoToken) async {
     try {
-      final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'verifyKakaoToken')..timeout = const Duration(seconds: 30);
+      final HttpsCallable callable = CloudFunctions.instance
+          .getHttpsCallable(functionName: 'verifyKakaoToken')
+            ..timeout = const Duration(seconds: 30);
 
       final HttpsCallableResult result = await callable.call(
         <String, dynamic>{
@@ -72,7 +82,9 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   /// Kakao API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    return Future.error(PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Google Signin does not need sign up."));
+    return Future.error(PlatformException(
+        code: "UNSUPPORTED_FUNCTION",
+        message: "Google Signin does not need sign up."));
   }
 
   @override
@@ -85,13 +97,17 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   Future<FirebaseUser> linkWith(FirebaseUser user) async {
     try {
       final KakaoLoginResult kakaoResult = await _kakaoSignIn.logIn();
-      if (kakaoResult.errorMessage != null && kakaoResult.errorMessage.isNotEmpty) {
-        return Future.error(PlatformException(code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
+      if (kakaoResult.errorMessage != null &&
+          kakaoResult.errorMessage.isNotEmpty) {
+        return Future.error(PlatformException(
+            code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
       }
 
       var kakaoToken = await _getAccessToken();
 
-      final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'linkWithKakao')..timeout = const Duration(seconds: 30);
+      final HttpsCallable callable = CloudFunctions.instance
+          .getHttpsCallable(functionName: 'linkWithKakao')
+            ..timeout = const Duration(seconds: 30);
 
       final HttpsCallableResult result = await callable.call(
         <String, dynamic>{
@@ -102,7 +118,12 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       if (result.data['error'] != null) {
         return Future.error(result.data['error']);
       } else {
-        return _firebaseAuth.currentUser();
+        FirebaseUser user = await _firebaseAuth.currentUser();
+        // Update email info if possible.
+        if (kakaoResult.account.userEmail.isNotEmpty) {
+          await user.updateEmail(kakaoResult.account.userEmail);
+        }
+        return user;
       }
     } catch (e) {
       return Future.error(e);

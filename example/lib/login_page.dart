@@ -15,11 +15,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
-  final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
 
   @override
   Widget build(BuildContext context) {
-    print(">>>  Build Login Page");
+    print(">>> Build [Login] Page");
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -163,6 +162,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _phoneSignInButton(BuildContext context) {
+    final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
+
     return RaisedButton(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
@@ -199,7 +200,9 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text("Send Code"),
                     onPressed: () async {
                       final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
-                      phoneAuthAPI.verifyNumber(provider.phoneNumber);
+                      phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent: (String verificationId, [int forceResendingToken]) {
+                        print("Code sent");
+                      });
                     },
                   ),
                   SizedBox(height: 20),
@@ -221,10 +224,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   RaisedButton(
-                    child: Text("Verify"),
+                    child: Text("Sign in"),
                     onPressed: () async {
                       final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
-                      final result = await phoneAuthAPI.submitVerificationCode(provider.code);
+                      final result = await phoneAuthAPI.signInWithVerificationCode(provider.code);
                       bool succeed = result != null;
                       if (succeed) Navigator.of(context).pop();
                     },

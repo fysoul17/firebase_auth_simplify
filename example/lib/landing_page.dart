@@ -1,3 +1,4 @@
+import 'package:example/user_credential_provider.dart';
 import 'package:firebase_auth_simplify/firebase_auth_simplify.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
-    print(">>>  Build Landing Page");
+    print(">>> Build [Landing] Page");
     return Center(
       child: Container(
           child: Column(
@@ -22,6 +23,8 @@ class _LandingPageState extends State<LandingPage> {
           _buildFacebookLinkButton(),
           _buildGoogleLinkButton(),
           _buildKakaoLinkButton(),
+          Text("May take some time linking account for Kakao if the cloud server is on cold start"),
+          _buildPhoneLinkButton(),
         ],
       )),
     );
@@ -91,6 +94,100 @@ class _LandingPageState extends State<LandingPage> {
         } catch (e) {
           print(e);
         }
+      },
+    );
+  }
+
+  Widget _buildPhoneLinkButton() {
+    final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
+
+    return RaisedButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Text("Sign in with Phone / or Verification"),
+      onPressed: () {
+        showDialog(
+          context: context,
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Container(
+              height: 300,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey[700]),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          ),
+                          hintText: "+11 123-456-7890",
+                          labelText: "Phone Number"),
+                      keyboardType: TextInputType.phone,
+                      onChanged: (text) {
+                        UserCredentialProvider.of(context, listen: false).phoneNumber = text.trim();
+                      },
+                    ),
+                  ),
+                  RaisedButton(
+                    child: Text("Send Code"),
+                    onPressed: () async {
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                      phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent: (String verificationId, [int forceResendingToken]) {
+                        print("Code sent");
+                      });
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey[700]),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        hintText: "123456",
+                        labelText: "Code",
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (text) {
+                        UserCredentialProvider.of(context, listen: false).code = text.trim();
+                      },
+                    ),
+                  ),
+                  RaisedButton(
+                    child: Text("Link"),
+                    onPressed: () async {
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                      phoneAuthAPI.submitVerificationCode(provider.code);
+
+                      FirebaseUser user;
+                      bool succeed;
+                      try {
+                        user = await FirebaseAuthProvider.instance.linkCurrentUserWith(phoneAuthAPI);
+                        succeed = user != null;
+                      } catch (e) {
+                        print(e);
+                        succeed = false;
+                      }
+
+                      if (succeed) {
+                        print("Succeed");
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }

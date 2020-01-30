@@ -1,3 +1,7 @@
+## [0.4.1] - 30/Jan/2020
+
+- Added example screenshots
+
 ## [0.4.0] - 29/Jan/2020
 
 - Added Phone authentication

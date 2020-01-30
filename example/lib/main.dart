@@ -44,7 +44,10 @@ class AppPage extends StatelessWidget {
               child: LoginPage(),
             );
           } else {
-            return LandingPage();
+            return ChangeNotifierProvider(
+              create: (_) => UserCredentialProvider(),
+              child: LandingPage(),
+            );
           }
         } else {
           return _buildLoadingIndicator();

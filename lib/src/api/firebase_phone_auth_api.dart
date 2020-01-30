@@ -10,34 +10,52 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
   AuthCredential _credential;
   String _verificationId;
 
-  Future<void> verifyNumber(String phoneNumber, {int timeoutSeconds = 30}) async {
+  Future<void> verifyNumber(String phoneNumber,
+      {bool signInOnAutoRetrieval = true,
+      int timeoutSeconds = 30,
+      PhoneCodeSent codeSent,
+      PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+      PhoneVerificationCompleted verificationCompleted,
+      PhoneVerificationFailed verificationFailed}) async {
     assert(phoneNumber != null && phoneNumber.length > 1);
 
     _firebaseAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: Duration(seconds: timeoutSeconds),
       codeSent: (String verificationId, [int forceResendingToken]) {
-        print("codeSent: " + verificationId);
-        print("forceResendingToken: $forceResendingToken");
         _verificationId = verificationId;
+
+        codeSent(verificationId, forceResendingToken);
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        print("codeAutoRetrievalTimeout: " + verificationId);
         _verificationId = verificationId;
+
+        codeAutoRetrievalTimeout(verificationId);
       },
       verificationCompleted: (AuthCredential phoneAuthCredential) {
-        print(phoneAuthCredential.toString());
         _credential = phoneAuthCredential;
-        signIn();
+
+        verificationCompleted(phoneAuthCredential);
+        if (signInOnAutoRetrieval) {
+          signIn();
+        }
       },
       verificationFailed: (AuthException error) {
         print(error.code);
         print(error.message);
+
+        verificationFailed(error);
       },
     );
   }
 
-  Future<AuthResult> submitVerificationCode(String code) {
+  Future<AuthResult> signInWithVerificationCode(String code) {
+    submitVerificationCode(code);
+
+    return signIn();
+  }
+
+  AuthCredential submitVerificationCode(String code) {
     assert(_verificationId != null);
     assert(code != null && code.length == 6);
 
@@ -46,12 +64,14 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
       smsCode: code,
     );
 
-    return signIn();
+    return _credential;
   }
 
   @override
   Future<AuthResult> signUp() async {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Phone Signin does not need sign up.");
+    throw PlatformException(
+        code: "UNSUPPORTED_FUNCTION",
+        message: "Phone Signin does not need sign up.");
   }
 
   @override

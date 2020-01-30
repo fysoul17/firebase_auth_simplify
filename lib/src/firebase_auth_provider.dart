@@ -11,7 +11,8 @@ class FirebaseAuthProvider {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Stream<FirebaseUser> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged;
+  Stream<FirebaseUser> get onAuthStateChanged =>
+      _firebaseAuth.onAuthStateChanged;
 
   Future<FirebaseUser> currentUser() {
     return _firebaseAuth.currentUser();
@@ -53,7 +54,8 @@ class FirebaseAuthProvider {
       await _firebaseAuth.signOut();
 
       // If provider is firebase, we don't need to sign-out anymore.
-      if (_primaryAuth is FirebaseEmailAuthAPI || _primaryAuth is FirebasePhoneAuthAPI) return;
+      if (_primaryAuth is FirebaseEmailAuthAPI ||
+          _primaryAuth is FirebasePhoneAuthAPI) return;
 
       // If primary sign in provider is not firebase, we should do manually for them.
       await _primaryAuth.signOut();
@@ -90,7 +92,7 @@ class FirebaseAuthProvider {
 
   /// This will link the provided auth with currently signed-in user's account.
   /// If there is no previously signed-in user, this will throw an exception.
-  Future<void> linkCurrentUserWith(BaseAuthAPI api) async {
+  Future<FirebaseUser> linkCurrentUserWith(BaseAuthAPI api) async {
     try {
       FirebaseUser prevUser = await currentUser();
       return await api.linkWith(prevUser);

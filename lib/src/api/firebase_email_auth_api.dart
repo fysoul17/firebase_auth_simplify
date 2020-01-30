@@ -18,7 +18,8 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signUp() async {
     print("sign up with $email and $password");
     try {
-      return await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      return await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
     } catch (e) {
       return Future.error(e);
     }
@@ -28,7 +29,8 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signIn() async {
     print("sign in with $email and $password");
     try {
-      final authResult = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      final authResult = await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
       final FirebaseUser user = authResult.user;
       final FirebaseUser currentUser = await _firebaseAuth.currentUser();
       assert(user.uid == currentUser.uid);
@@ -46,6 +48,8 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
 
   @override
   Future<FirebaseUser> linkWith(FirebaseUser user) {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "e-mail sign-in does not support linking");
+    throw PlatformException(
+        code: "UNSUPPORTED_FUNCTION",
+        message: "e-mail sign-in does not support linking");
   }
 }
