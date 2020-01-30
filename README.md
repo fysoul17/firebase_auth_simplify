@@ -63,11 +63,11 @@ Secondly, as this package includes several 3rd party sign-ins, such as google, f
 - [X] Email
 - [X] Phone
 - [X] Google
-- [ ] Google Play Games (Need to wait for the [firebase_auth](https://pub.dev/packages/firebase_auth) to support this)
+- [ ] Google Play Games 
 - [X] Facebook
 - [X] Kakao
-- [ ] Apple (Need to wait for the [firebase_auth](https://pub.dev/packages/firebase_auth) to support this)
-- [ ] GameCenter (Need to wait for the [firebase_auth](https://pub.dev/packages/firebase_auth) to support this)
+- [ ] Apple 
+- [ ] GameCenter 
 - [ ] Twitter
 - [ ] Github
 
@@ -159,6 +159,12 @@ Simply initialize the class you want to sign in for, and call signIn() function.
 FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signUp();
 FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signIn();
 
+// phone auth
+FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
+phoneAuthAPI.verifyNumber(provider.phoneNumber, ....);
+phoneAuthAPI.submitVerificationCode(provider.code);
+FirebaseAuthProvider.instance.signInWith(phoneAuthAPI);
+
 // google
 FirebaseGoogleAuthAPI().signIn();
 FirebaseGoogleAuthAPI(scopes: ['email', 'https://www.googleapis.com/auth/contacts.readonly']).signIn();
@@ -186,6 +192,14 @@ FirebaseAuthProvider.instance.signUpWith(FirebaseWhateverAuthAPI());    // Only 
 FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI()); 
 ```
 
+*Phone authenticate needs few more lines.*
+```dart
+FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
+phoneAuthAPI.verifyNumber(provider.phoneNumber, ....);
+phoneAuthAPI.submitVerificationCode(provider.code);
+FirebaseAuthProvider.instance.signInWith(phoneAuthAPI);
+```
+
 #### Sign-Out
 ``` dart
 // Then you can sign-out anywhere. 
@@ -196,6 +210,14 @@ FirebaseAuthProvider.instance.signOut();
 #### Linking
 ```dart
 FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseWhateverAuthAPI());
+```
+
+*Phone authenticate needs few more lines.*
+```dart
+final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI(); // Initialize first
+phoneAuthAPI.verifyNumber(provider.phoneNumber, ......);          // Send phone number to get code
+phoneAuthAPI.submitVerificationCode(code);                        // Submit the 6 digit code
+FirebaseAuthProvider.instance.linkCurrentUserWith(phoneAuthAPI);  // Then try link (Will get ERROR_INVALID_VERIFICATION_CODE exception if code is wrong)
 ```
 
 ### Other useful packages you might be instrested
