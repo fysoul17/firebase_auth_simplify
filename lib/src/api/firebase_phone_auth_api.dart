@@ -49,12 +49,6 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
     );
   }
 
-  Future<AuthResult> signInWithVerificationCode(String code) {
-    submitVerificationCode(code);
-
-    return signIn();
-  }
-
   AuthCredential submitVerificationCode(String code) {
     assert(_verificationId != null);
     assert(code != null && code.length == 6);
