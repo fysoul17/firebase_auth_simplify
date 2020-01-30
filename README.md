@@ -164,7 +164,7 @@ FirebaseEmailAuthAPI(email: inputEmail, password: inputPassword).signIn();
 
 // phone auth
 FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
-phoneAuthAPI.verifyNumber(provider.phoneNumber, ....);
+phoneAuthAPI.verifyNumber(phoneNumber, ....);
 phoneAuthAPI.submitVerificationCode(code);
 phoneAuthAPI.signIn();
 
@@ -198,8 +198,8 @@ FirebaseAuthProvider.instance.signInWith(FirebaseWhateverAuthAPI());
 *Phone authenticate needs few more lines.*
 ```dart
 FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
-phoneAuthAPI.verifyNumber(provider.phoneNumber, ....);
-phoneAuthAPI.submitVerificationCode(provider.code);
+phoneAuthAPI.verifyNumber(phoneNumber, ....);
+phoneAuthAPI.submitVerificationCode(code);
 
 FirebaseAuthProvider.instance.signInWith(phoneAuthAPI);
 ```
@@ -219,7 +219,7 @@ FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseWhateverAuthAPI());
 *Phone authenticate needs few more lines.*
 ```dart
 final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI(); // Initialize first
-phoneAuthAPI.verifyNumber(provider.phoneNumber, ......);          // Send phone number to get code
+phoneAuthAPI.verifyNumber(phoneNumber, ......);          // Send phone number to get code
 phoneAuthAPI.submitVerificationCode(code);                        // Submit the 6 digit code
 
 FirebaseAuthProvider.instance.linkCurrentUserWith(phoneAuthAPI);  // Then try link (Will get ERROR_INVALID_VERIFICATION_CODE exception if code is wrong)
