@@ -109,7 +109,7 @@ class _LandingPageState extends State<LandingPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Text("Sign in with Phone / or Verification"),
+      child: Text("Link with Phone"),
       onPressed: () {
         showDialog(
           context: context,

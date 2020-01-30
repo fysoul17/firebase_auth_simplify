@@ -176,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      child: Text("Sign in with Phone / or Verification"),
+      child: Text("Sign in with Phone"),
       onPressed: () {
         showDialog(
           context: context,
