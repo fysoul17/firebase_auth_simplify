@@ -47,10 +47,10 @@ _handleSignOut() {
 import 'package:firebase_auth_simplify/firebase_auth_simplify.dart';
 
 // Google
-FirebaseAuthAPI.signInWith(GoogleSignInAPI());
+FirebaseAuthProvider.signInWith(GoogleSignInAPI());
 
 // Facebook
-FirebaseAuthAPI.signInWith(FacebookSignInAPI());
+FirebaseAuthProvider.signInWith(FacebookSignInAPI());
 
 ...
 ```
