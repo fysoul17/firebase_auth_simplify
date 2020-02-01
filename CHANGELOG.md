@@ -1,3 +1,7 @@
+## [0.4.3] - 1/Feb/2020
+
+- Update document
+
 ## [0.4.2] - 30/Jan/2020
 
 - Added information about app crash regarding Facebook package issue
