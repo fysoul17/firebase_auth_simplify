@@ -1,3 +1,7 @@
+## [0.4.4] - 2/Feb/2020
+
+- Bug Fix.
+
 ## [0.4.3] - 1/Feb/2020
 
 - Update document
