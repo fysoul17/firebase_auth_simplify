@@ -164,7 +164,7 @@ Lastly, as this uses external request, you need to **change your plan to 'Blaze'
 
 ### Simple Sign-up/in/out
 Simply initialize the class you want to sign in for, and call signIn() function.   
-**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because ['firebase_auth' package does not support the function](https://github.com/FirebaseExtended/flutterfire/issues/891) yet. It only provides signOut() function for firebase provided auth such as email. You also have to manage linking option yourself.**
+**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because ['firebase_auth' package does not support the function](https://github.com/FirebaseExtended/flutterfire/issues/891) yet. It only provides signOut() function which signs out from the firebase, not from 3rd party providers. You also have to manage linking option yourself if needed.**
 
 #### Sign-Up / Sign-In
 ```dart
