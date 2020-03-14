@@ -191,7 +191,7 @@ FirebaseFacebookAuthAPI().signIn();
 
 #### Sign-Out
 ```dart
-// Singing out using original package of firebase_auth. 
+// Signing out using original package of firebase_auth. 
 // IMPORTANT: This will NOT sign out from 3rd party provider
 FirebaseAuth.instance.signOut();
 ```
