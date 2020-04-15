@@ -13,7 +13,7 @@ However, although the most of usecases have almost the same signing-in and out c
 You will basically write some codes like below for **Each** of sign-in methods, and you want to manage it seperatly from the widget you use.
 
 ```dart
-// Example of Google sign in (What you will do with original packages)
+// Example of typical Google sign in (What you will do with original packages)
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -164,7 +164,7 @@ Lastly, as this uses external request, you need to **change your plan to 'Blaze'
 
 ### Simple Sign-up/in/out
 Simply initialize the class you want to sign in for, and call signIn() function.   
-**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because ['firebase_auth' package does not support the function](https://github.com/FirebaseExtended/flutterfire/issues/891) yet. It only provides signOut() function for firebase provided auth such as email. You also have to manage linking option yourself.**
+**NOTE: If you use it this way, you need to manage 3rd party sign-'out' logic yourself, because ['firebase_auth' package does not support the function](https://github.com/FirebaseExtended/flutterfire/issues/891) yet. It only provides signOut() function which signs out from the firebase, not from 3rd party providers. You also have to manage linking option yourself if needed.**
 
 #### Sign-Up / Sign-In
 ```dart
@@ -191,7 +191,7 @@ FirebaseFacebookAuthAPI().signIn();
 
 #### Sign-Out
 ```dart
-// Singing out using original package of firebase_auth. 
+// Signing out using original package of firebase_auth. 
 // IMPORTANT: This will NOT sign out from 3rd party provider
 FirebaseAuth.instance.signOut();
 ```
