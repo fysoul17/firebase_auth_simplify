@@ -1,3 +1,7 @@
+## [0.5.0] - 15/04/2020
+
+- Fixed 'com.google.firebase.messaging.FirebaseMessagingService is inaccessible' erorr by updating firebase_auth package version.
+
 ## [0.4.4] - 2/Feb/2020
 
 - Bug Fix.
