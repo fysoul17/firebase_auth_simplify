@@ -101,4 +101,17 @@ class FirebaseAuthProvider {
       return Future.error(e);
     }
   }
+
+  /// This will unlink the provided auth with currently signed-in user's account.
+  ///
+  /// If there is no previously signed-in user or no linked auth, this will throw an exception.
+  /// PlatformException(FirebaseException, User was not linked to an account with the given provider.)
+  Future<void> unlinkCurrentUserFrom(BaseAuthAPI api) async {
+    try {
+      FirebaseUser prevUser = await currentUser();
+      await api.unlinkFrom(prevUser);
+    } catch (e) {
+      throw Future.error(e);
+    }
+  }
 }

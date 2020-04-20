@@ -84,7 +84,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signUp() {
     return Future.error(PlatformException(
         code: "UNSUPPORTED_FUNCTION",
-        message: "Google Signin does not need sign up."));
+        message: "Kakao Signin does not need sign up."));
   }
 
   @override
@@ -127,6 +127,15 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       }
     } catch (e) {
       return Future.error(e);
+    }
+  }
+
+  @override
+  Future<void> unlinkFrom(FirebaseUser user) async {
+    try {
+      await user.unlinkFromProvider("kakaocorp.com");
+    } catch (e) {
+      throw Future.error(e);
     }
   }
 }

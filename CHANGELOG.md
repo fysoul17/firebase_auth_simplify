@@ -1,4 +1,8 @@
-## [0.5.0] - 15/04/2020
+## [0.6.0] - 20/Apr/2020
+
+- Added unlink feature.
+
+## [0.5.0] - 15/Apr/2020
 
 - Fixed 'com.google.firebase.messaging.FirebaseMessagingService is inaccessible' erorr by updating firebase_auth package version.
 

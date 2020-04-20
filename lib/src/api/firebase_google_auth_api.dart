@@ -82,4 +82,13 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
       return Future.error(e);
     }
   }
+
+  @override
+  Future<void> unlinkFrom(FirebaseUser user) async {
+    try {
+      await user.unlinkFromProvider("google.com");
+    } catch (e) {
+      throw Future.error(e);
+    }
+  }
 }

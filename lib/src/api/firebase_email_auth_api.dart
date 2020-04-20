@@ -50,6 +50,13 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   Future<FirebaseUser> linkWith(FirebaseUser user) {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
-        message: "e-mail sign-in does not support linking");
+        message: "e-mail sign-in does not support linking and unlinking");
+  }
+
+  @override
+  Future<void> unlinkFrom(FirebaseUser user) async {
+    throw PlatformException(
+        code: "UNSUPPORTED_FUNCTION",
+        message: "e-mail sign-in does not support linking and unlinking");
   }
 }

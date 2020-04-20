@@ -91,6 +91,15 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   Future<AuthResult> signUp() {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
-        message: "Google Signin does not need sign up.");
+        message: "Facebook Signin does not need sign up.");
+  }
+
+  @override
+  Future<void> unlinkFrom(FirebaseUser user) async {
+    try {
+      await user.unlinkFromProvider("facebook.com");
+    } catch (e) {
+      throw Future.error(e);
+    }
   }
 }

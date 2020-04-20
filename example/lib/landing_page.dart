@@ -13,19 +13,46 @@ class _LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     print(">>> Build [Landing] Page");
-    return Center(
+    return SingleChildScrollView(
       child: Container(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           _buildSignOutButton(),
           _displayUserInfo(),
-          _buildFacebookLinkButton(),
-          _buildGoogleLinkButton(),
-          _buildKakaoLinkButton(),
-          Text(
-              "May take some time linking account for Kakao if the cloud server is on cold start"),
-          _buildPhoneLinkButton(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildFacebookLinkButton(),
+              SizedBox(width: 10),
+              _buildFacebookUnlinkButton(),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildGoogleLinkButton(),
+              SizedBox(width: 10),
+              _buildGoogleUnlinkButton(),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildKakaoLinkButton(),
+              SizedBox(width: 10),
+              _buildKakaoUnlinkButton(),
+            ],
+          ),
+          Text("May take some time linking account for Kakao if the cloud server is on cold start"),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _buildPhoneLinkButton(),
+              SizedBox(width: 10),
+              _buildPhoneUnlinkButton(),
+            ],
+          ),
         ],
       )),
     );
@@ -62,8 +89,21 @@ class _LandingPageState extends State<LandingPage> {
       child: Text("Link with Facebook"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .linkCurrentUserWith(FirebaseFacebookAuthAPI());
+          await FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseFacebookAuthAPI());
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
+  }
+
+  Widget _buildFacebookUnlinkButton() {
+    return RaisedButton(
+      child: Text("Unlink with Facebook"),
+      onPressed: () async {
+        try {
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebaseFacebookAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -77,8 +117,21 @@ class _LandingPageState extends State<LandingPage> {
       child: Text("Link with Google"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .linkCurrentUserWith(FirebaseGoogleAuthAPI());
+          await FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseGoogleAuthAPI());
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
+  }
+
+  Widget _buildGoogleUnlinkButton() {
+    return RaisedButton(
+      child: Text("Unlink with Google"),
+      onPressed: () async {
+        try {
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebaseGoogleAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -92,8 +145,21 @@ class _LandingPageState extends State<LandingPage> {
       child: Text("Link with Kakao"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .linkCurrentUserWith(FirebaseKakaoAuthAPI());
+          await FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseKakaoAuthAPI());
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
+  }
+
+  Widget _buildKakaoUnlinkButton() {
+    return RaisedButton(
+      child: Text("Unlink with Kakao"),
+      onPressed: () async {
+        try {
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebaseKakaoAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -127,25 +193,21 @@ class _LandingPageState extends State<LandingPage> {
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey[700]),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
                           hintText: "+11 123-456-7890",
                           labelText: "Phone Number"),
                       keyboardType: TextInputType.phone,
                       onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false)
-                            .phoneNumber = text.trim();
+                        UserCredentialProvider.of(context, listen: false).phoneNumber = text.trim();
                       },
                     ),
                   ),
                   RaisedButton(
                     child: Text("Send Code"),
                     onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
-                      phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent:
-                          (String verificationId, [int forceResendingToken]) {
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                      phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent: (String verificationId, [int forceResendingToken]) {
                         print("Code sent");
                       });
                     },
@@ -157,31 +219,27 @@ class _LandingPageState extends State<LandingPage> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey[700]),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
                         ),
                         hintText: "123456",
                         labelText: "Code",
                       ),
                       keyboardType: TextInputType.number,
                       onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false).code =
-                            text.trim();
+                        UserCredentialProvider.of(context, listen: false).code = text.trim();
                       },
                     ),
                   ),
                   RaisedButton(
                     child: Text("Link"),
                     onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
+                      final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
                       phoneAuthAPI.submitVerificationCode(provider.code);
 
                       FirebaseUser user;
                       bool succeed;
                       try {
-                        user = await FirebaseAuthProvider.instance
-                            .linkCurrentUserWith(phoneAuthAPI);
+                        user = await FirebaseAuthProvider.instance.linkCurrentUserWith(phoneAuthAPI);
                         succeed = user != null;
                       } catch (e) {
                         print(e);
@@ -200,6 +258,20 @@ class _LandingPageState extends State<LandingPage> {
             ),
           ),
         );
+      },
+    );
+  }
+
+  Widget _buildPhoneUnlinkButton() {
+    return RaisedButton(
+      child: Text("Unlink with Phone"),
+      onPressed: () async {
+        try {
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebasePhoneAuthAPI());
+          setState(() {});
+        } catch (e) {
+          print(e);
+        }
       },
     );
   }
