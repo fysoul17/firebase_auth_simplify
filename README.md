@@ -235,6 +235,11 @@ phoneAuthAPI.submitVerificationCode(code);                        // Submit the 
 FirebaseAuthProvider.instance.linkCurrentUserWith(phoneAuthAPI);  // Then try link (Will get ERROR_INVALID_VERIFICATION_CODE exception if code is wrong)
 ```
 
+#### Unlinking
+```dart
+FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebaseWhateverAuthAPI());
+```
+
 ### Other useful packages you might be instrested
 [Material design Speed Dial](https://pub.dev/packages/flutter_speed_dial_material_design)   
 [Google Maps Place Picker](https://pub.dev/packages/google_maps_place_picker)
