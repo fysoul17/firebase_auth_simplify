@@ -1,3 +1,7 @@
+## [0.6.1] - 21/Apr/2020
+
+- Updated getUserClaim() function to check null on user data.
+
 ## [0.6.0] - 20/Apr/2020
 
 - Added unlink feature.

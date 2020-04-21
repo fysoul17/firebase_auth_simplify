@@ -11,8 +11,7 @@ class FirebaseAuthProvider {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Stream<FirebaseUser> get onAuthStateChanged =>
-      _firebaseAuth.onAuthStateChanged;
+  Stream<FirebaseUser> get onAuthStateChanged => _firebaseAuth.onAuthStateChanged;
 
   Future<FirebaseUser> currentUser() {
     return _firebaseAuth.currentUser();
@@ -21,9 +20,8 @@ class FirebaseAuthProvider {
   Future<Map<dynamic, dynamic>> getUserClaim() async {
     try {
       FirebaseUser user = await currentUser();
-      final IdTokenResult idToken = await user.getIdToken(refresh: true);
-      print(idToken.claims);
-      return idToken.claims;
+      final IdTokenResult idToken = await user?.getIdToken(refresh: true);
+      return idToken?.claims;
     } catch (e) {
       return Future.error(e);
     }
@@ -54,9 +52,7 @@ class FirebaseAuthProvider {
       await _firebaseAuth.signOut();
 
       // If provider is firebase, we don't need to sign-out anymore.
-      if (_primaryAuth == null ||
-          _primaryAuth is FirebaseEmailAuthAPI ||
-          _primaryAuth is FirebasePhoneAuthAPI) return;
+      if (_primaryAuth == null || _primaryAuth is FirebaseEmailAuthAPI || _primaryAuth is FirebasePhoneAuthAPI) return;
 
       // If primary sign in provider is not firebase, we should do manually for them.
       await _primaryAuth.signOut();
