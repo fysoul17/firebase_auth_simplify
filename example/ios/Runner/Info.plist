@@ -41,5 +41,64 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<key>KAKAO_APP_KEY</key>
+	<string>afb19754a1d9f6ffd3441ad737c39311</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakao0123456789abcdefghijklmn</string>
+		<string>kakaokompassauth</string>
+		<string>storykompassauth</string>
+		<string>kakaolink</string>
+		<string>storylink</string>
+	</array>
+
+	<key>CFBundleURLTypes</key>
+	<array>
+		<!--
+		<dict>
+		... Some other CFBundleURLTypes definition.
+		</dict>
+		-->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakao0123456789abcdefghijklmn</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!--
+				Replace "000000000000" with your Facebook App ID here.
+				**NOTE**: The scheme needs to start with `fb` and then your ID.
+				-->
+				<string>fb479673482974182</string>
+			</array>
+		</dict>
+	</array>
+
+	<key>FacebookAppID</key>
+
+	<!-- Replace "000000000000" with your Facebook App ID here. -->
+	<string>479673482974182</string>
+	<key>FacebookDisplayName</key>
+
+	<!-- Replace "YOUR_APP_NAME" with your Facebook App name. -->
+	<string>Flutter Firebase Auth Simplify</string>
+
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
+
 </dict>
 </plist>

@@ -310,7 +310,7 @@ class _LoginPageState extends State<LoginPage> {
       Scaffold.of(context).showSnackBar(snackBar);
     } catch (e) {
       print("other exceptions: $e");
-      final snackBar = SnackBar(content: Text(e.message));
+      final snackBar = SnackBar(content: Text(e));
       Scaffold.of(context).showSnackBar(snackBar);
     }
 

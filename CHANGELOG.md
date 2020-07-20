@@ -1,3 +1,7 @@
+## [0.6.2] - 20/Jul/2020
+
+- Updated fierbase pacakge versions.
+
 ## [0.6.1] - 21/Apr/2020
 
 - Updated getUserClaim() function to check null on user data.
