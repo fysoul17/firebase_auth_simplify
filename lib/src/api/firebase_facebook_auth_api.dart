@@ -34,6 +34,12 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
           'https://graph.facebook.com/v2.12/me?fields=email&access_token=$token');
       final profile = jsonDecode(graphResponse.body);
 
+      if (profile['email'] == null) {
+        throw PlatformException(
+            code: "EMAIL_NOT_PROVIDED",
+            message: "e-mail must be provided to use the app.");
+      }
+
       authResult.user.updateEmail(profile['email']);
 
       return authResult;

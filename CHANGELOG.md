@@ -1,3 +1,7 @@
+## [0.6.4] - 29/Jul/2020
+
+- Added exception code on missing email for facebook auth.
+
 ## [0.6.3] - 29/Jul/2020
 
 - Fixed typo of Kakao exception code.
