@@ -19,7 +19,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       if (kakaoResult.errorMessage != null &&
           kakaoResult.errorMessage.isNotEmpty) {
         return Future.error(PlatformException(
-            code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
+            code: "KAKAO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
       }
 
       final authResult = await _firebaseAuth.signInWithCustomToken(
@@ -100,7 +100,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       if (kakaoResult.errorMessage != null &&
           kakaoResult.errorMessage.isNotEmpty) {
         return Future.error(PlatformException(
-            code: "KAKAKO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
+            code: "KAKAO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
       }
 
       var kakaoToken = await _getAccessToken();

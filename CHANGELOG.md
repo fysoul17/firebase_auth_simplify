@@ -1,3 +1,7 @@
+## [0.6.3] - 29/Jul/2020
+
+- Fixed typo of Kakao exception code.
+
 ## [0.6.2] - 20/Jul/2020
 
 - Updated fierbase pacakge versions.
