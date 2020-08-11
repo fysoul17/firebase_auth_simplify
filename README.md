@@ -118,8 +118,7 @@ Import [flutter_facebook_login](https://pub.dev/packages/flutter_facebook_login)
 >       Also, on Windows platform, DO NOT use keytool at powershall using vs code's terminal. Use cmd.
 
 ### Kakao sign in Setup
-Import [flutter_kakao_login](https://pub.dev/packages/flutter_kakao_login) package and follow the instruction. Steps are similar to Facebook settings.
-
+Import [kakao_flutter_sdk](https://github.com/kakao/kakao_flutter_sdk) package and follow the instruction. Steps are similar to Facebook settings.
 1. Create an app at kakao developer portal.
 2. Set key hash in there. 
 > **Note**: Use [openssl-0.9.8e_X64](https://code.google.com/archive/p/openssl-for-windows/downloads) for getting key hash. Otherwise, it will fail to authenticate.    
