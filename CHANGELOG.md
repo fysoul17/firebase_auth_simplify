@@ -1,3 +1,7 @@
+## [1.0.0] - 11/Aug/2020
+
+- Switched Kakao SDK to the official package.
+
 ## [0.6.4] - 29/Jul/2020
 
 - Added exception code on missing email for facebook auth.

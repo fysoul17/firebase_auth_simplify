@@ -47,11 +47,11 @@
 
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>kakao0123456789abcdefghijklmn</string>
+		<string>kakaoafb19754a1d9f6ffd3441ad737c39311</string>
 		<string>kakaokompassauth</string>
 		<string>storykompassauth</string>
 		<string>kakaolink</string>
-		<string>storylink</string>
+		<string>kakaotalk-5.9.7</string>
 	</array>
 
 	<key>CFBundleURLTypes</key>

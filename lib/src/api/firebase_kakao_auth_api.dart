@@ -1,7 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_kakao_login/flutter_kakao_login.dart';
+import 'package:kakao_flutter_sdk/auth.dart';
+import 'package:kakao_flutter_sdk/user.dart';
 import 'base_auth_api.dart';
 
 class FirebaseKakaoAuthAPI implements BaseAuthAPI {
@@ -10,31 +11,24 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   static const String providerId = 'kakaocorp.com';
 
-  FlutterKakaoLogin _kakaoSignIn = FlutterKakaoLogin();
-
   @override
   Future<AuthResult> signIn() async {
     try {
-      final KakaoLoginResult kakaoResult = await _kakaoSignIn.logIn();
-      if (kakaoResult.errorMessage != null &&
-          kakaoResult.errorMessage.isNotEmpty) {
-        return Future.error(PlatformException(
-            code: "KAKAO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
-      }
-
+      final String token = await _retrieveToken();
       final authResult = await _firebaseAuth.signInWithCustomToken(
-          token: await _verifyToken(await _getAccessToken()));
+          token: await _verifyToken(token));
 
-      final FirebaseUser user = authResult.user;
+      final FirebaseUser firebaseUser = authResult.user;
       final FirebaseUser currentUser = await _firebaseAuth.currentUser();
-      assert(user.uid == currentUser.uid);
+      assert(firebaseUser.uid == currentUser.uid);
 
-      // When sign in is done, update email info.
-      if (kakaoResult.account.userEmail.isNotEmpty) {
-        authResult.user.updateEmail(kakaoResult.account.userEmail);
-      }
+      await _updateEmailInfo(firebaseUser);
 
       return authResult;
+    } on KakaoAuthException catch (e) {
+      return Future.error(e);
+    } on KakaoClientException catch (e) {
+      return Future.error(e);
     } catch (e) {
       if (e.toString().contains("already in use")) {
         return Future.error(PlatformException(
@@ -45,15 +39,30 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
     }
   }
 
-  Future<String> _getAccessToken() async {
-    final KakaoAccessToken accessToken =
-        await (_kakaoSignIn.currentAccessToken);
-    if (accessToken == null) {
-      return Future.error(PlatformException(
-          code: "KAKAO_ACCESSTOKEN_ERROR",
-          message: "Failed to get access token from Kakao"));
-    } else {
-      return accessToken.token;
+  Future<String> _retrieveToken() async {
+    final AccessToken existingToken =
+        await AccessTokenStore.instance.fromStore();
+    if (existingToken != null && existingToken.accessToken != null) {
+      return existingToken.accessToken;
+    }
+
+    final installed = await isKakaoTalkInstalled();
+    final authCode = installed
+        ? await AuthCodeClient.instance.requestWithTalk()
+        : await AuthCodeClient.instance.request();
+    AccessTokenResponse token =
+        await AuthApi.instance.issueAccessToken(authCode);
+
+    await AccessTokenStore.instance.toStore(
+        token); // Store access token in AccessTokenStore for future API requests.
+    return token.accessToken;
+  }
+
+  Future<void> _updateEmailInfo(FirebaseUser firebaseUser) async {
+    // When sign in is done, update email info.
+    User kakaoUser = await UserApi.instance.me();
+    if (kakaoUser.kakaoAccount.email.isNotEmpty) {
+      firebaseUser.updateEmail(kakaoUser.kakaoAccount.email);
     }
   }
 
@@ -89,21 +98,14 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
   @override
   Future<void> signOut() {
-    _kakaoSignIn ??= FlutterKakaoLogin();
-    return _kakaoSignIn.logOut();
+    AccessTokenStore.instance.clear();
+    return Future.value("");
   }
 
   @override
   Future<FirebaseUser> linkWith(FirebaseUser user) async {
     try {
-      final KakaoLoginResult kakaoResult = await _kakaoSignIn.logIn();
-      if (kakaoResult.errorMessage != null &&
-          kakaoResult.errorMessage.isNotEmpty) {
-        return Future.error(PlatformException(
-            code: "KAKAO_SIGNIN_FAILED", message: kakaoResult.errorMessage));
-      }
-
-      var kakaoToken = await _getAccessToken();
+      final token = await _retrieveToken();
 
       final HttpsCallable callable = CloudFunctions.instance
           .getHttpsCallable(functionName: 'linkWithKakao')
@@ -111,7 +113,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
       final HttpsCallableResult result = await callable.call(
         <String, dynamic>{
-          'token': kakaoToken,
+          'token': token,
         },
       );
 
@@ -119,12 +121,16 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
         return Future.error(result.data['error']);
       } else {
         FirebaseUser user = await _firebaseAuth.currentUser();
+
         // Update email info if possible.
-        if (kakaoResult.account.userEmail.isNotEmpty) {
-          await user.updateEmail(kakaoResult.account.userEmail);
-        }
+        await _updateEmailInfo(user);
+
         return user;
       }
+    } on KakaoAuthException catch (e) {
+      return Future.error(e);
+    } on KakaoClientException catch (e) {
+      return Future.error(e);
     } catch (e) {
       return Future.error(e);
     }

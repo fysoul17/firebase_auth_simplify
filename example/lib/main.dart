@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:kakao_flutter_sdk/auth.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'login_page.dart';
 import 'landing_page.dart';
 import 'user_credential_provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  KakaoContext.clientId = "afb19754a1d9f6ffd3441ad737c39311";
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
