@@ -1,6 +1,6 @@
 # Firebase Authentication Simplify
 
-A high-level framework of [Firebase Auth](https://pub.dev/packages/firebase_auth) package that wraps several lines of codes to one line in order to easily use sign-in function.
+Wrapper package of framework of [Firebase Auth](https://pub.dev/packages/firebase_auth) package that wraps several lines of codes to one line in order to easily use sign-in function.
 
 ![](screenshots/signin.PNG)
 ![](screenshots/link.PNG)
