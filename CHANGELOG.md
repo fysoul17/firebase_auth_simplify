@@ -1,3 +1,7 @@
+## [1.1.1] - 12/Aug/2020
+
+- Reverted retrieveToken() function to private. We can use AccessTokenStore.instance.fromStore() to fetch access token after logged in.
+
 ## [1.1.0] - 12/Aug/2020
 
 - Made retrieveToken() function public so that we can use it for other Kakao APIs.
