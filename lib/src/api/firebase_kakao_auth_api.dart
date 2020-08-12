@@ -14,9 +14,8 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   @override
   Future<AuthResult> signIn() async {
     try {
-      final String token = await retrieveToken();
-      final authResult = await _firebaseAuth.signInWithCustomToken(
-          token: await _verifyToken(token));
+      final String token = await _retrieveToken();
+      final authResult = await _firebaseAuth.signInWithCustomToken(token: await _verifyToken(token));
 
       final FirebaseUser firebaseUser = authResult.user;
       final FirebaseUser currentUser = await _firebaseAuth.currentUser();
@@ -31,30 +30,23 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       return Future.error(e);
     } catch (e) {
       if (e.toString().contains("already in use")) {
-        return Future.error(PlatformException(
-            code: "ERROR_EMAIL_ALREADY_IN_USE",
-            message: "The email address is already in use by another account"));
+        return Future.error(PlatformException(code: "ERROR_EMAIL_ALREADY_IN_USE", message: "The email address is already in use by another account"));
       }
       return Future.error(e);
     }
   }
 
-  Future<String> retrieveToken() async {
-    final AccessToken existingToken =
-        await AccessTokenStore.instance.fromStore();
+  Future<String> _retrieveToken() async {
+    final AccessToken existingToken = await AccessTokenStore.instance.fromStore();
     if (existingToken != null && existingToken.accessToken != null) {
       return existingToken.accessToken;
     }
 
     final installed = await isKakaoTalkInstalled();
-    final authCode = installed
-        ? await AuthCodeClient.instance.requestWithTalk()
-        : await AuthCodeClient.instance.request();
-    AccessTokenResponse token =
-        await AuthApi.instance.issueAccessToken(authCode);
+    final authCode = installed ? await AuthCodeClient.instance.requestWithTalk() : await AuthCodeClient.instance.request();
+    AccessTokenResponse token = await AuthApi.instance.issueAccessToken(authCode);
 
-    await AccessTokenStore.instance.toStore(
-        token); // Store access token in AccessTokenStore for future API requests.
+    await AccessTokenStore.instance.toStore(token); // Store access token in AccessTokenStore for future API requests.
     return token.accessToken;
   }
 
@@ -68,9 +60,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
   Future<String> _verifyToken(String kakaoToken) async {
     try {
-      final HttpsCallable callable = CloudFunctions.instance
-          .getHttpsCallable(functionName: 'verifyKakaoToken')
-            ..timeout = const Duration(seconds: 30);
+      final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'verifyKakaoToken')..timeout = const Duration(seconds: 30);
 
       final HttpsCallableResult result = await callable.call(
         <String, dynamic>{
@@ -91,9 +81,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   /// Kakao API does not need sign up.
   @override
   Future<AuthResult> signUp() {
-    return Future.error(PlatformException(
-        code: "UNSUPPORTED_FUNCTION",
-        message: "Kakao Signin does not need sign up."));
+    return Future.error(PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Kakao Signin does not need sign up."));
   }
 
   @override
@@ -105,11 +93,9 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   @override
   Future<FirebaseUser> linkWith(FirebaseUser user) async {
     try {
-      final token = await retrieveToken();
+      final token = await _retrieveToken();
 
-      final HttpsCallable callable = CloudFunctions.instance
-          .getHttpsCallable(functionName: 'linkWithKakao')
-            ..timeout = const Duration(seconds: 30);
+      final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(functionName: 'linkWithKakao')..timeout = const Duration(seconds: 30);
 
       final HttpsCallableResult result = await callable.call(
         <String, dynamic>{
