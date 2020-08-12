@@ -1,3 +1,7 @@
+## [1.1.0] - 12/Aug/2020
+
+- Made retrieveToken() function public so that we can use it for other Kakao APIs.
+
 ## [1.0.0] - 11/Aug/2020
 
 - Switched Kakao SDK to the official package.

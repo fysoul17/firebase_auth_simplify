@@ -14,7 +14,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   @override
   Future<AuthResult> signIn() async {
     try {
-      final String token = await _retrieveToken();
+      final String token = await retrieveToken();
       final authResult = await _firebaseAuth.signInWithCustomToken(
           token: await _verifyToken(token));
 
@@ -39,7 +39,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
     }
   }
 
-  Future<String> _retrieveToken() async {
+  Future<String> retrieveToken() async {
     final AccessToken existingToken =
         await AccessTokenStore.instance.fromStore();
     if (existingToken != null && existingToken.accessToken != null) {
@@ -105,7 +105,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   @override
   Future<FirebaseUser> linkWith(FirebaseUser user) async {
     try {
-      final token = await _retrieveToken();
+      final token = await retrieveToken();
 
       final HttpsCallable callable = CloudFunctions.instance
           .getHttpsCallable(functionName: 'linkWithKakao')
