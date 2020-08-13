@@ -1,6 +1,6 @@
 # Firebase Authentication Simplify
 
-A high-level framework of [Firebase Auth](https://pub.dev/packages/firebase_auth) package that wraps several lines of codes to one line in order to easily use sign-in function.
+Wrapper package of framework of [Firebase Auth](https://pub.dev/packages/firebase_auth) package that wraps several lines of codes to one line in order to easily use sign-in function.
 
 ![](screenshots/signin.PNG)
 ![](screenshots/link.PNG)
@@ -62,7 +62,7 @@ Firstly, if your project only uses firebase provided sign-in methods, such as em
 
 Secondly, as this package includes several 3rd party sign-ins, such as google, facebook and kakao, it contains related packages which you might not need it. For example, even though you only provide email and google sign-in methods to the customer, your project will still contain facebook or other sign-in packages which is not necessary in your case. If the issue matters to you, I recommend using your own way instead of implementing this package
 
-## Currently supporting Sign-ins (X = supporting)
+## Currently supporting Sign-ins
 - [X] Email
 - [X] Phone
 - [X] Google
