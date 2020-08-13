@@ -40,12 +40,6 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   }
 
   Future<String> _retrieveToken() async {
-    final AccessToken existingToken =
-        await AccessTokenStore.instance.fromStore();
-    if (existingToken != null && existingToken.accessToken != null) {
-      return existingToken.accessToken;
-    }
-
     final installed = await isKakaoTalkInstalled();
     final authCode = installed
         ? await AuthCodeClient.instance.requestWithTalk()
