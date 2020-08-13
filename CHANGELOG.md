@@ -1,3 +1,7 @@
+## [1.1.2] - 13/Aug/2020
+
+- Removed codes that uses existing token for Kakao login.
+
 ## [1.1.1] - 12/Aug/2020
 
 - Reverted retrieveToken() function to private. We can use AccessTokenStore.instance.fromStore() to fetch access token after logged in.
