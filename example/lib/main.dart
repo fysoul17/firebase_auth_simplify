@@ -10,7 +10,7 @@ import 'landing_page.dart';
 import 'user_credential_provider.dart';
 
 void main() {
-  KakaoContext.clientId = "afb19754a1d9f6ffd3441ad737c39311";
+  KakaoContext.clientId = "YOUR_NATIVE_APP_KEY";
 
   runApp(MyApp());
 }
