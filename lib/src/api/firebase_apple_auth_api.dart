@@ -50,6 +50,12 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
             message: _appleSignIn.error.toString());
       }
 
+      if (_appleSignIn.status == AuthorizationStatus.cancelled) {
+        throw PlatformException(
+            code: "APPLE_SIGN_IN_CANCELLED",
+            message: "Apple sign in cancelled by user.");
+      }
+
       final AuthCredential credential =
           OAuthProvider(providerId: 'apple.com').getCredential(
         accessToken:
