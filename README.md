@@ -69,7 +69,7 @@ Secondly, as this package includes several 3rd party sign-ins, such as google, f
 - [ ] Google Play Games 
 - [X] Facebook
 - [X] Kakao
-- [ ] Apple 
+- [X] Apple 
 - [ ] GameCenter 
 - [ ] Twitter
 - [ ] Github
@@ -116,6 +116,9 @@ Import [flutter_facebook_login](https://pub.dev/packages/flutter_facebook_login)
 
 > **Note**: Use [openssl-0.9.8e_X64](https://code.google.com/archive/p/openssl-for-windows/downloads) for getting key hash. Otherwise, it will fail to authenticate.    
 >       Also, on Windows platform, DO NOT use keytool at powershall using vs code's terminal. Use cmd.
+
+### Apple sign in Setup
+Import [apple_sign_in](https://pub.dev/packages/sign_in_with_apple) package and follow the instruction there or follow the instruction on [this package](https://pub.dev/packages/apple_sign_in) for setting stuffs on apple developer site only.
 
 ### Kakao sign in Setup
 Import [kakao_flutter_sdk](https://github.com/kakao/kakao_flutter_sdk) package and follow the instruction. Steps are similar to Facebook settings.
