@@ -1,3 +1,7 @@
+## [1.2.0] - 25/Sep/2020
+
+- Supporting Apple sign in.
+
 ## [1.1.2] - 13/Aug/2020
 
 - Removed codes that uses existing token for Kakao login.
