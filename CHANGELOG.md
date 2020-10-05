@@ -1,3 +1,7 @@
+## [1.3.0] - 05/Oct/2020
+
+- Update kaka_flutter_sdk version to support Flutter 1.22.0 error
+
 ## [1.2.0] - 25/Sep/2020
 
 - Supporting Apple sign in.
