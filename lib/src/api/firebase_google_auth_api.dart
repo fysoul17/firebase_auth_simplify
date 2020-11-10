@@ -12,13 +12,11 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
   GoogleSignInAccount account;
 
   @override
-  Future<AuthResult> signIn() async {
+  Future<UserCredential> signIn() async {
     try {
       final authResult =
           await _firebaseAuth.signInWithCredential(await _getCredential());
-      final FirebaseUser user = authResult.user;
-      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
-      assert(user.uid == currentUser.uid);
+      assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
 
       // When sign in is done, update email info.
       authResult.user.updateEmail(account.email);
@@ -48,7 +46,7 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
       if (account == null) return null;
 
       final GoogleSignInAuthentication auth = await account.authentication;
-      return GoogleAuthProvider.getCredential(
+      return GoogleAuthProvider.credential(
         accessToken: auth.accessToken,
         idToken: auth.idToken,
       );
@@ -59,7 +57,7 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
 
   /// Google API does not need sign up.
   @override
-  Future<AuthResult> signUp() {
+  Future<UserCredential> signUp() {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "Google Signin does not need sign up.");
@@ -72,7 +70,7 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<FirebaseUser> linkWith(FirebaseUser user) async {
+  Future<User> linkWith(User user) async {
     try {
       /// NOTE: As mentioned above in _getCredential function, we cannot catch exception here. Need to wait for google_sign package to solve this issue (or dart team).
       ///       This only happens in Debug mode.
@@ -84,9 +82,9 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<void> unlinkFrom(FirebaseUser user) async {
+  Future<void> unlinkFrom(User user) async {
     try {
-      await user.unlinkFromProvider("google.com");
+      await user.unlink("google.com");
     } catch (e) {
       throw Future.error(e);
     }

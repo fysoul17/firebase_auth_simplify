@@ -15,7 +15,7 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<AuthResult> signUp() async {
+  Future<UserCredential> signUp() async {
     print("sign up with $email and $password");
     try {
       return await _firebaseAuth.createUserWithEmailAndPassword(
@@ -26,14 +26,12 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<AuthResult> signIn() async {
+  Future<UserCredential> signIn() async {
     print("sign in with $email and $password");
     try {
       final authResult = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      final FirebaseUser user = authResult.user;
-      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
-      assert(user.uid == currentUser.uid);
+      assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
 
       return authResult;
     } catch (e) {
@@ -47,14 +45,14 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<FirebaseUser> linkWith(FirebaseUser user) {
+  Future<User> linkWith(User user) {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "e-mail sign-in does not support linking and unlinking");
   }
 
   @override
-  Future<void> unlinkFrom(FirebaseUser user) async {
+  Future<void> unlinkFrom(User user) async {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "e-mail sign-in does not support linking and unlinking");

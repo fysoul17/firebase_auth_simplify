@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kakao_flutter_sdk/auth.dart';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -9,8 +10,12 @@ import 'login_page.dart';
 import 'landing_page.dart';
 import 'user_credential_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   KakaoContext.clientId = "YOUR_NATIVE_APP_KEY";
+
+  await Firebase.initializeApp();
 
   runApp(MyApp());
 }
@@ -40,8 +45,8 @@ class AppPage extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return StreamBuilder<FirebaseUser>(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
+    return StreamBuilder<User>(
+      stream: FirebaseAuth.instance.authStateChanges(),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.data == null) {

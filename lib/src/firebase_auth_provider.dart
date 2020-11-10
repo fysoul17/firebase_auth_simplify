@@ -11,17 +11,16 @@ class FirebaseAuthProvider {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Stream<FirebaseUser> get onAuthStateChanged =>
-      _firebaseAuth.onAuthStateChanged;
+  Stream<User> get onAuthStateChanged => _firebaseAuth.authStateChanges();
 
-  Future<FirebaseUser> currentUser() {
-    return _firebaseAuth.currentUser();
+  User currentUser() {
+    return _firebaseAuth.currentUser;
   }
 
   Future<Map<dynamic, dynamic>> getUserClaim() async {
     try {
-      FirebaseUser user = await currentUser();
-      final IdTokenResult idToken = await user?.getIdToken(refresh: true);
+      User user = currentUser();
+      final IdTokenResult idToken = await user?.getIdTokenResult(true);
       return idToken?.claims;
     } catch (e) {
       return Future.error(e);
@@ -31,13 +30,13 @@ class FirebaseAuthProvider {
   BaseAuthAPI _primaryAuth;
   BaseAuthAPI get primaryAuth => _primaryAuth;
 
-  Future<AuthResult> signUpWith(BaseAuthAPI api) async {
+  Future<UserCredential> signUpWith(BaseAuthAPI api) async {
     _primaryAuth = api;
 
     return api.signUp();
   }
 
-  Future<AuthResult> signInWith(BaseAuthAPI api) async {
+  Future<UserCredential> signInWith(BaseAuthAPI api) async {
     _primaryAuth = api;
 
     return api.signIn();
@@ -92,9 +91,9 @@ class FirebaseAuthProvider {
 
   /// This will link the provided auth with currently signed-in user's account.
   /// If there is no previously signed-in user, this will throw an exception.
-  Future<FirebaseUser> linkCurrentUserWith(BaseAuthAPI api) async {
+  Future<User> linkCurrentUserWith(BaseAuthAPI api) async {
     try {
-      FirebaseUser prevUser = await currentUser();
+      User prevUser = currentUser();
       return await api.linkWith(prevUser);
     } catch (e) {
       return Future.error(e);
@@ -107,7 +106,7 @@ class FirebaseAuthProvider {
   /// PlatformException(FirebaseException, User was not linked to an account with the given provider.)
   Future<void> unlinkCurrentUserFrom(BaseAuthAPI api) async {
     try {
-      FirebaseUser prevUser = await currentUser();
+      User prevUser = currentUser();
       await api.unlinkFrom(prevUser);
     } catch (e) {
       throw Future.error(e);

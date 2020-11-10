@@ -40,7 +40,7 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
           signIn();
         }
       },
-      verificationFailed: (AuthException error) {
+      verificationFailed: (FirebaseAuthException error) {
         print(error.code);
         print(error.message);
 
@@ -53,7 +53,7 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
     assert(_verificationId != null);
     assert(code != null && code.length == 6);
 
-    _credential = PhoneAuthProvider.getCredential(
+    _credential = PhoneAuthProvider.credential(
       verificationId: _verificationId,
       smsCode: code,
     );
@@ -62,19 +62,18 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<AuthResult> signUp() async {
+  Future<UserCredential> signUp() async {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "Phone Signin does not need sign up.");
   }
 
   @override
-  Future<AuthResult> signIn() async {
+  Future<UserCredential> signIn() async {
     try {
-      AuthResult result = await _firebaseAuth.signInWithCredential(_credential);
-      final FirebaseUser user = result.user;
-      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
-      assert(user.uid == currentUser.uid);
+      UserCredential result =
+          await _firebaseAuth.signInWithCredential(_credential);
+      assert(result.user.uid == _firebaseAuth.currentUser.uid);
       return result;
     } catch (e) {
       return Future.error(e);
@@ -87,7 +86,7 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<FirebaseUser> linkWith(FirebaseUser user) async {
+  Future<User> linkWith(User user) async {
     try {
       return (await user.linkWithCredential(_credential)).user;
     } catch (e) {
@@ -96,9 +95,9 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<void> unlinkFrom(FirebaseUser user) async {
+  Future<void> unlinkFrom(User user) async {
     try {
-      await user.unlinkFromProvider("phone");
+      await user.unlink("phone");
     } catch (e) {
       throw Future.error(e);
     }

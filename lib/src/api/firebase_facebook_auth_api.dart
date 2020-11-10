@@ -21,13 +21,11 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   String token;
 
   @override
-  Future<AuthResult> signIn() async {
+  Future<UserCredential> signIn() async {
     try {
       final authResult =
           await _firebaseAuth.signInWithCredential(await _getCredential());
-      final FirebaseUser user = authResult.user;
-      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
-      assert(user.uid == currentUser.uid);
+      assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
 
       // When sign in is done, update email info.
       final graphResponse = await http.get(
@@ -63,9 +61,7 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
 
     token = result.accessToken.token;
 
-    return FacebookAuthProvider.getCredential(
-      accessToken: token,
-    );
+    return FacebookAuthProvider.credential(token);
   }
 
   Future<FacebookLoginResult> _signInProvider() async {
@@ -83,7 +79,7 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<FirebaseUser> linkWith(FirebaseUser user) async {
+  Future<User> linkWith(User user) async {
     try {
       return (await user.linkWithCredential(await _getCredential())).user;
     } catch (e) {
@@ -94,16 +90,16 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
 
   /// Facebook API does not need sign up.
   @override
-  Future<AuthResult> signUp() {
+  Future<UserCredential> signUp() {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "Facebook Signin does not need sign up.");
   }
 
   @override
-  Future<void> unlinkFrom(FirebaseUser user) async {
+  Future<void> unlinkFrom(User user) async {
     try {
-      await user.unlinkFromProvider("facebook.com");
+      await user.unlink("facebook.com");
     } catch (e) {
       throw Future.error(e);
     }

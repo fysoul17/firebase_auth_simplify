@@ -2,7 +2,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/auth.dart';
-import 'package:kakao_flutter_sdk/user.dart';
+import 'package:kakao_flutter_sdk/user.dart' as kakao;
 import 'base_auth_api.dart';
 
 class FirebaseKakaoAuthAPI implements BaseAuthAPI {
@@ -12,15 +12,14 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   static const String providerId = 'kakaocorp.com';
 
   @override
-  Future<AuthResult> signIn() async {
+  Future<UserCredential> signIn() async {
     try {
       final String token = await _retrieveToken();
-      final authResult = await _firebaseAuth.signInWithCustomToken(
-          token: await _verifyToken(token));
+      final authResult =
+          await _firebaseAuth.signInWithCustomToken(await _verifyToken(token));
 
-      final FirebaseUser firebaseUser = authResult.user;
-      final FirebaseUser currentUser = await _firebaseAuth.currentUser();
-      assert(firebaseUser.uid == currentUser.uid);
+      final User firebaseUser = authResult.user;
+      assert(firebaseUser.uid == _firebaseAuth.currentUser.uid);
 
       await _updateEmailInfo(firebaseUser);
 
@@ -52,9 +51,9 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
     return token.accessToken;
   }
 
-  Future<void> _updateEmailInfo(FirebaseUser firebaseUser) async {
+  Future<void> _updateEmailInfo(User firebaseUser) async {
     // When sign in is done, update email info.
-    User kakaoUser = await UserApi.instance.me();
+    kakao.User kakaoUser = await kakao.UserApi.instance.me();
     if (kakaoUser.kakaoAccount.email.isNotEmpty) {
       firebaseUser.updateEmail(kakaoUser.kakaoAccount.email);
     }
@@ -62,9 +61,8 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
   Future<String> _verifyToken(String kakaoToken) async {
     try {
-      final HttpsCallable callable = CloudFunctions.instance
-          .getHttpsCallable(functionName: 'verifyKakaoToken')
-            ..timeout = const Duration(seconds: 30);
+      final HttpsCallable callable =
+          FirebaseFunctions.instance.httpsCallable('verifyKakaoToken');
 
       final HttpsCallableResult result = await callable.call(
         <String, dynamic>{
@@ -84,7 +82,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
 
   /// Kakao API does not need sign up.
   @override
-  Future<AuthResult> signUp() {
+  Future<UserCredential> signUp() {
     return Future.error(PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "Kakao Signin does not need sign up."));
@@ -97,13 +95,12 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<FirebaseUser> linkWith(FirebaseUser user) async {
+  Future<User> linkWith(User user) async {
     try {
       final token = await _retrieveToken();
 
-      final HttpsCallable callable = CloudFunctions.instance
-          .getHttpsCallable(functionName: 'linkWithKakao')
-            ..timeout = const Duration(seconds: 30);
+      final HttpsCallable callable =
+          FirebaseFunctions.instance.httpsCallable('linkWithKakao');
 
       final HttpsCallableResult result = await callable.call(
         <String, dynamic>{
@@ -114,10 +111,8 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       if (result.data['error'] != null) {
         return Future.error(result.data['error']);
       } else {
-        FirebaseUser user = await _firebaseAuth.currentUser();
-
         // Update email info if possible.
-        await _updateEmailInfo(user);
+        await _updateEmailInfo(_firebaseAuth.currentUser);
 
         return user;
       }
@@ -131,9 +126,9 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<void> unlinkFrom(FirebaseUser user) async {
+  Future<void> unlinkFrom(User user) async {
     try {
-      await user.unlinkFromProvider("kakaocorp.com");
+      await user.unlink("kakaocorp.com");
     } catch (e) {
       throw Future.error(e);
     }

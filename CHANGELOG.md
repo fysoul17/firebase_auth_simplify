@@ -1,3 +1,7 @@
+## [2.0.0] - 10/Nov/2020
+
+- Refactored to allow new verison of firebase packages as the firebase core version has critical changes since version 0.5.0
+
 ## [1.3.0] - 05/Oct/2020
 
 - Update kaka_flutter_sdk version to support Flutter 1.22.0 error
