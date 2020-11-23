@@ -55,7 +55,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
     // When sign in is done, update email info.
     kakao.User kakaoUser = await kakao.UserApi.instance.me();
     if (kakaoUser.kakaoAccount.email.isNotEmpty) {
-      firebaseUser.updateEmail(kakaoUser.kakaoAccount.email);
+      await firebaseUser.updateEmail(kakaoUser.kakaoAccount.email);
     }
   }
 

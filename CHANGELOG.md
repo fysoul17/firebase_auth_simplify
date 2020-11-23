@@ -1,3 +1,7 @@
+## [2.0.1] - 23/Nov/2020
+
+- Fixed bug by adding await as updating email from Kakao login was not respecting 'Future' return.
+
 ## [2.0.0] - 10/Nov/2020
 
 - Refactored to allow new verison of firebase packages as the firebase core version has critical changes since version 0.5.0
