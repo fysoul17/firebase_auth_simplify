@@ -1,3 +1,7 @@
+## [2.0.2] - 24/Nov/2020
+
+- Added await for other login methods' email updates.
+
 ## [2.0.1] - 23/Nov/2020
 
 - Fixed bug by adding await as updating email from Kakao login was not respecting 'Future' return.
