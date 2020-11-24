@@ -1,3 +1,15 @@
+## [2.0.5] - 24/Nov/2020
+
+- Added emailRequired parameter for Kakao Login. Setting true will force Kakao sign-in to have email.
+
+## [2.0.4] - 24/Nov/2020
+
+- Removed debug print.
+
+## [2.0.3] - 24/Nov/2020
+
+- Kakao bug fix.
+
 ## [2.0.2] - 24/Nov/2020
 
 - Added await for other login methods' email updates.

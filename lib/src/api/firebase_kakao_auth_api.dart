@@ -6,9 +6,13 @@ import 'package:kakao_flutter_sdk/user.dart' as kakao;
 import 'base_auth_api.dart';
 
 class FirebaseKakaoAuthAPI implements BaseAuthAPI {
-  FirebaseKakaoAuthAPI();
+  FirebaseKakaoAuthAPI({
+    this.emailRequired = false,
+  });
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final bool emailRequired;
+
   static const String providerId = 'kakaocorp.com';
 
   @override
@@ -21,10 +25,23 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       final User firebaseUser = authResult.user;
       assert(firebaseUser.uid == _firebaseAuth.currentUser.uid);
 
-      if (authResult.user.email.isEmpty) {
+      if (authResult.user.email == null || authResult.user.email.isEmpty) {
         // When sign in is done, update email info.
         kakao.User kakaoUser = await kakao.UserApi.instance.me();
-        if (kakaoUser.kakaoAccount.email.isNotEmpty) {
+
+        // Email is required, but kaka account doesn't have email set.
+        if (emailRequired &&
+            (kakaoUser.kakaoAccount.email == null ||
+                kakaoUser.kakaoAccount.email.isEmpty)) {
+          throw PlatformException(
+              code: "KAKAO_EMAIL_REQUIRED",
+              message:
+                  "Email must be set in Kakao Account in order to sign in.");
+        }
+
+        // Whether the email is as must or not, update email if exists.
+        if (kakaoUser.kakaoAccount.email != null &&
+            kakaoUser.kakaoAccount.email.isNotEmpty) {
           await authResult.user.updateEmail(kakaoUser.kakaoAccount.email);
         }
       }
