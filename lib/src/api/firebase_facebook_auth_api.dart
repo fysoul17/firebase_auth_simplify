@@ -38,7 +38,7 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
             message: "e-mail must be provided to use the app.");
       }
 
-      authResult.user.updateEmail(profile['email']);
+      await authResult.user.updateEmail(profile['email']);
 
       return authResult;
     } catch (e) {

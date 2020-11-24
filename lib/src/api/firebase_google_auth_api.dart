@@ -19,7 +19,7 @@ class FirebaseGoogleAuthAPI implements BaseAuthAPI {
       assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
 
       // When sign in is done, update email info.
-      authResult.user.updateEmail(account.email);
+      await authResult.user.updateEmail(account.email);
 
       return authResult;
     } catch (e) {

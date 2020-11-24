@@ -21,7 +21,13 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       final User firebaseUser = authResult.user;
       assert(firebaseUser.uid == _firebaseAuth.currentUser.uid);
 
-      await _updateEmailInfo(firebaseUser);
+      if (authResult.user.email.isEmpty) {
+        // When sign in is done, update email info.
+        kakao.User kakaoUser = await kakao.UserApi.instance.me();
+        if (kakaoUser.kakaoAccount.email.isNotEmpty) {
+          await authResult.user.updateEmail(kakaoUser.kakaoAccount.email);
+        }
+      }
 
       return authResult;
     } on KakaoAuthException catch (e) {
@@ -49,14 +55,6 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
     await AccessTokenStore.instance.toStore(
         token); // Store access token in AccessTokenStore for future API requests.
     return token.accessToken;
-  }
-
-  Future<void> _updateEmailInfo(User firebaseUser) async {
-    // When sign in is done, update email info.
-    kakao.User kakaoUser = await kakao.UserApi.instance.me();
-    if (kakaoUser.kakaoAccount.email.isNotEmpty) {
-      await firebaseUser.updateEmail(kakaoUser.kakaoAccount.email);
-    }
   }
 
   Future<String> _verifyToken(String kakaoToken) async {
@@ -111,9 +109,6 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
       if (result.data['error'] != null) {
         return Future.error(result.data['error']);
       } else {
-        // Update email info if possible.
-        await _updateEmailInfo(_firebaseAuth.currentUser);
-
         return user;
       }
     } on KakaoAuthException catch (e) {

@@ -28,7 +28,7 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
       assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
 
       // When sign in is done, update email info.
-      authResult.user.updateEmail(authResult.user.email);
+      await authResult.user.updateEmail(authResult.user.email);
 
       return authResult;
     } catch (e) {
