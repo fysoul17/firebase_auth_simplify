@@ -23,8 +23,7 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
   @override
   Future<UserCredential> signIn() async {
     try {
-      final authResult =
-          await _firebaseAuth.signInWithCredential(await _getCredential());
+      final authResult = await _firebaseAuth.signInWithCredential(await _getCredential());
       assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
 
       // When sign in is done, update email info.
@@ -59,8 +58,7 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
       final credential = OAuthCredential(
         providerId: "apple.com", // MUST be "apple.com"
         signInMethod: "oauth", // MUST be "oauth"
-        accessToken: nativeAppleCred
-            .identityToken, // propagate Apple ID token to BOTH accessToken and idToken parameters
+        accessToken: nativeAppleCred.identityToken, // propagate Apple ID token to BOTH accessToken and idToken parameters
         idToken: nativeAppleCred.identityToken,
         rawNonce: nonce,
       );
@@ -94,12 +92,10 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
     return String.fromCharCodes(charCodes);
   }
 
-  /// Google API does not need sign up.
+  /// Apple API does not need sign up.
   @override
   Future<UserCredential> signUp() {
-    throw PlatformException(
-        code: "UNSUPPORTED_FUNCTION",
-        message: "Google Signin does not need sign up.");
+    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Apple Signin does not need sign up.");
   }
 
   @override

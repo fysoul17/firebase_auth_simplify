@@ -1,3 +1,7 @@
+## [2.1.0] - 26/Jan/2021
+
+- Updated firebase versions and Kakao SDK.
+
 ## [2.0.5] - 24/Nov/2020
 
 - Added emailRequired parameter for Kakao Login. Setting true will force Kakao sign-in to have email.
