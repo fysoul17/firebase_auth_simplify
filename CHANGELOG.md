@@ -1,3 +1,7 @@
+## [2.1.1] - 27/Jan/2021
+
+- Removed firebase analytics
+
 ## [2.1.0] - 26/Jan/2021
 
 - Updated firebase versions and Kakao SDK.
