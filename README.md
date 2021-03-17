@@ -86,7 +86,7 @@ The more caffeine I get, the more useful projects I can make in the future.
 
 > **NOTE: Only setup what you need. No need to configure all of followings**
 >      
-> IF you encounter app crashes, you must [configure Facebook setting](https://pub.dev/packages/flutter_facebook_login).
+> IF you encounter app crashes, you must [configure Facebook setting](https://pub.dev/packages/flutter_login_facebook).
 > ```
 > Caused by com.facebook.FacebookSdkNotInitializedException
 > The SDK has not been initialized, make sure to call FacebookSdk.sdkInitialize() first.
@@ -112,7 +112,7 @@ You basically need to [set google services](https://pub.dev/packages/firebase_au
 Import [google_sign_in](https://pub.dev/packages/google_sign_in) package and follow the instruction.
 
 ### Facebook sign in Setup
-Import [flutter_facebook_login](https://pub.dev/packages/flutter_facebook_login) package and follow the instruction.
+Import [flutter_login_facebook](https://pub.dev/packages/flutter_login_facebook) package and follow the instruction.
 
 > **Note**: Use [openssl-0.9.8e_X64](https://code.google.com/archive/p/openssl-for-windows/downloads) for getting key hash. Otherwise, it will fail to authenticate.    
 >       Also, on Windows platform, DO NOT use keytool at powershall using vs code's terminal. Use cmd.
@@ -160,7 +160,7 @@ If you see below error, you also need to set Permission of iam.serviceAccounts.s
 ```
 [Grant permission](https://stackoverflow.com/a/54066988/12567737) in console.
 
-Lastly, as this uses external request, you need to **change your plan to 'Blaze'**. Otherwise, you will get 500 error.
+Lastly, as this uses external request, you need to **change your plan to 'Blaze'**. Otherwise, you will get 500 error. Otherwise, you will see 'getaddrinfo EAI_AGAIN kapi.kakao.com:433' error.
 
 ## Usage
 
