@@ -2,34 +2,41 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:http/http.dart' as http;
 
 import 'base_auth_api.dart';
 
 class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   FirebaseFacebookAuthAPI({
-    this.webViewOnly = false,
+    this.permissions = const [
+      FacebookPermission.email,
+      FacebookPermission.publicProfile
+    ],
+    this.useAndroidExpressLogin = true,
   });
 
-  final bool webViewOnly;
+  final List<FacebookPermission> permissions;
+  final bool useAndroidExpressLogin;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   FacebookLogin _facebookLogin = FacebookLogin();
 
-  String token;
+  String? token;
 
   @override
   Future<UserCredential> signIn() async {
     try {
       final authResult =
           await _firebaseAuth.signInWithCredential(await _getCredential());
-      assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
+      assert(authResult.user!.uid == _firebaseAuth.currentUser!.uid);
+
+      final url = Uri.https('graph.facebook.com', '/v2.12/me',
+          {'fields': 'email', 'access_token': token});
 
       // When sign in is done, update email info.
-      final graphResponse = await http.get(
-          'https://graph.facebook.com/v2.12/me?fields=email&access_token=$token');
+      final graphResponse = await http.get(url);
       final profile = jsonDecode(graphResponse.body);
 
       if (profile['email'] == null) {
@@ -38,7 +45,7 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
             message: "e-mail must be provided to use the app.");
       }
 
-      await authResult.user.updateEmail(profile['email']);
+      await authResult.user!.updateEmail(profile['email']);
 
       return authResult;
     } catch (e) {
@@ -50,40 +57,40 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   Future<AuthCredential> _getCredential() async {
     final FacebookLoginResult result = await _signInProvider();
 
-    if (result.status == FacebookLoginStatus.cancelledByUser) {
+    if (result.status == FacebookLoginStatus.cancel) {
       return Future.error(PlatformException(
           code: "FACEBOOK_CANCELLED_BY_USER",
           message: "Facebook sign-in is cancelled by user."));
     } else if (result.status == FacebookLoginStatus.error) {
       return Future.error(PlatformException(
-          code: "FACEBOOK_SIGN_IN_FAILED", message: result.errorMessage));
+          code: "FACEBOOK_SIGN_IN_FAILED",
+          message: result.error!.developerMessage));
     }
 
-    token = result.accessToken.token;
+    token = result.accessToken!.token;
 
-    return FacebookAuthProvider.credential(token);
+    return FacebookAuthProvider.credential(token!);
   }
 
   Future<FacebookLoginResult> _signInProvider() async {
-    if (webViewOnly) {
-      _facebookLogin.loginBehavior = FacebookLoginBehavior.webViewOnly;
+    if (useAndroidExpressLogin) {
+      return await _facebookLogin.expressLogin();
     }
 
-    return await _facebookLogin.logIn(['email']);
+    return await _facebookLogin.logIn(permissions: permissions);
   }
 
   @override
   Future<void> signOut() {
-    _facebookLogin ??= FacebookLogin();
     return _facebookLogin.logOut();
   }
 
   @override
-  Future<User> linkWith(User user) async {
+  Future<User?> linkWith(User? user) async {
     try {
-      return (await user.linkWithCredential(await _getCredential())).user;
+      return (await user!.linkWithCredential(await _getCredential())).user;
     } catch (e) {
-      if (_facebookLogin != null) _facebookLogin.logOut();
+      _facebookLogin.logOut();
       return Future.error(e);
     }
   }
@@ -97,9 +104,9 @@ class FirebaseFacebookAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<void> unlinkFrom(User user) async {
+  Future<void> unlinkFrom(User? user) async {
     try {
-      await user.unlink("facebook.com");
+      await user!.unlink("facebook.com");
     } catch (e) {
       throw Future.error(e);
     }

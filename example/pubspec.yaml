@@ -16,6 +16,8 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.1.0 <3.0.0"
 
+publish_to: none
+
 dependencies:
   flutter:
     sdk: flutter
@@ -27,7 +29,8 @@ dependencies:
   firebase_auth_simplify:
     path: ../
 
-  provider: ^4.0.2
+dependency_overrides:
+  dio: ^4.0.0-beta4
 
 dev_dependencies:
   flutter_test:

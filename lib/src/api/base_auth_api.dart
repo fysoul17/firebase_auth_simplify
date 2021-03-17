@@ -4,6 +4,6 @@ abstract class BaseAuthAPI {
   Future<UserCredential> signUp();
   Future<UserCredential> signIn();
   Future<void> signOut();
-  Future<User> linkWith(User user);
-  Future<void> unlinkFrom(User user);
+  Future<User?> linkWith(User? user);
+  Future<void> unlinkFrom(User? user);
 }

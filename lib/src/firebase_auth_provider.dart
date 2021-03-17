@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_simplify/firebase_auth_simplify.dart';
 import 'package:firebase_auth_simplify/src/api/base_auth_api.dart';
@@ -11,24 +13,24 @@ class FirebaseAuthProvider {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Stream<User> get onAuthStateChanged => _firebaseAuth.authStateChanges();
+  Stream<User?> get onAuthStateChanged => _firebaseAuth.authStateChanges();
 
-  User currentUser() {
+  User? currentUser() {
     return _firebaseAuth.currentUser;
   }
 
-  Future<Map<dynamic, dynamic>> getUserClaim() async {
+  Future<Map<dynamic, dynamic>?> getUserClaim() async {
     try {
-      User user = currentUser();
-      final IdTokenResult idToken = await user?.getIdTokenResult(true);
-      return idToken?.claims;
+      User? user = currentUser();
+      final IdTokenResult idToken = (await user?.getIdTokenResult(true))!;
+      return idToken.claims;
     } catch (e) {
       return Future.error(e);
     }
   }
 
-  BaseAuthAPI _primaryAuth;
-  BaseAuthAPI get primaryAuth => _primaryAuth;
+  BaseAuthAPI? _primaryAuth;
+  BaseAuthAPI? get primaryAuth => _primaryAuth;
 
   Future<UserCredential> signUpWith(BaseAuthAPI api) async {
     _primaryAuth = api;
@@ -57,17 +59,18 @@ class FirebaseAuthProvider {
           _primaryAuth is FirebasePhoneAuthAPI) return;
 
       // If primary sign in provider is not firebase, we should do manually for them.
-      await _primaryAuth.signOut();
+      await _primaryAuth!.signOut();
     } catch (e) {
       return Future.error(e);
     }
   }
 
-  Future<BaseAuthAPI> getAuthFromClaims() async {
+  Future<BaseAuthAPI?> getAuthFromClaims() async {
     try {
-      BaseAuthAPI api;
-      var userClaims = await getUserClaim();
-      final String providerId = userClaims['firebase']['sign_in_provider'];
+      BaseAuthAPI? api;
+      var userClaims =
+          await (getUserClaim() as FutureOr<Map<dynamic, dynamic>>);
+      final String? providerId = userClaims['firebase']['sign_in_provider'];
 
       if (providerId == "google.com") {
         api = FirebaseGoogleAuthAPI();
@@ -91,9 +94,9 @@ class FirebaseAuthProvider {
 
   /// This will link the provided auth with currently signed-in user's account.
   /// If there is no previously signed-in user, this will throw an exception.
-  Future<User> linkCurrentUserWith(BaseAuthAPI api) async {
+  Future<User?> linkCurrentUserWith(BaseAuthAPI api) async {
     try {
-      User prevUser = currentUser();
+      User? prevUser = currentUser();
       return await api.linkWith(prevUser);
     } catch (e) {
       return Future.error(e);
@@ -106,7 +109,7 @@ class FirebaseAuthProvider {
   /// PlatformException(FirebaseException, User was not linked to an account with the given provider.)
   Future<void> unlinkCurrentUserFrom(BaseAuthAPI api) async {
     try {
-      User prevUser = currentUser();
+      User? prevUser = currentUser();
       await api.unlinkFrom(prevUser);
     } catch (e) {
       throw Future.error(e);

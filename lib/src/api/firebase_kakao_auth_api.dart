@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -19,20 +21,18 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   Future<UserCredential> signIn() async {
     try {
       final String token = await _retrieveToken();
-      final authResult =
-          await _firebaseAuth.signInWithCustomToken(await _verifyToken(token));
+      final authResult = await _firebaseAuth.signInWithCustomToken(
+          await (_verifyToken(token) as FutureOr<String>));
 
-      final User firebaseUser = authResult.user;
-      assert(firebaseUser.uid == _firebaseAuth.currentUser.uid);
+      final User firebaseUser = authResult.user!;
+      assert(firebaseUser.uid == _firebaseAuth.currentUser!.uid);
 
-      if (authResult.user.email == null || authResult.user.email.isEmpty) {
+      if (authResult.user!.email == null || authResult.user!.email!.isEmpty) {
         // When sign in is done, update email info.
         kakao.User kakaoUser = await kakao.UserApi.instance.me();
 
         // Email is required, but kaka account doesn't have email set.
-        if (emailRequired &&
-            (kakaoUser.kakaoAccount.email == null ||
-                kakaoUser.kakaoAccount.email.isEmpty)) {
+        if (emailRequired && kakaoUser.kakaoAccount.email.isEmpty) {
           throw PlatformException(
               code: "KAKAO_EMAIL_REQUIRED",
               message:
@@ -40,9 +40,8 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
         }
 
         // Whether the email is as must or not, update email if exists.
-        if (kakaoUser.kakaoAccount.email != null &&
-            kakaoUser.kakaoAccount.email.isNotEmpty) {
-          await authResult.user.updateEmail(kakaoUser.kakaoAccount.email);
+        if (kakaoUser.kakaoAccount.email.isNotEmpty) {
+          await authResult.user!.updateEmail(kakaoUser.kakaoAccount.email);
         }
       }
 
@@ -74,7 +73,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
     return token.accessToken;
   }
 
-  Future<String> _verifyToken(String kakaoToken) async {
+  Future<String?> _verifyToken(String kakaoToken) async {
     try {
       final HttpsCallable callable =
           FirebaseFunctions.instance.httpsCallable('verifyKakaoToken');
@@ -110,7 +109,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<User> linkWith(User user) async {
+  Future<User?> linkWith(User? user) async {
     try {
       final token = await _retrieveToken();
 
@@ -138,9 +137,9 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<void> unlinkFrom(User user) async {
+  Future<void> unlinkFrom(User? user) async {
     try {
-      await user.unlink("kakaocorp.com");
+      await user!.unlink("kakaocorp.com");
     } catch (e) {
       throw Future.error(e);
     }

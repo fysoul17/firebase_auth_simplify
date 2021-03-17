@@ -84,86 +84,77 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailSignInButton(BuildContext context) {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+    return ElevatedButton(
       child: Text("Sign in with Email"),
       onPressed: () {
         showDialog(
           context: context,
-          child: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Container(
-              height: 300,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
+          builder: (context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                height: 300,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey[700]),
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            ),
+                            hintText: "example@flutter.com",
+                            labelText: "e-mail"),
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (text) {
+                          UserCredentialProvider.of(context, listen: false).email = text.trimRight();
+                        },
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey[700]),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
-                          hintText: "example@flutter.com",
-                          labelText: "e-mail"),
-                      keyboardType: TextInputType.emailAddress,
-                      onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false)
-                            .email = text.trimRight();
-                      },
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[700]),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
+                          hintText: "********",
+                          labelText: "password",
                         ),
-                        hintText: "********",
-                        labelText: "password",
+                        obscureText: true,
+                        onChanged: (text) {
+                          UserCredentialProvider.of(context, listen: false).password = text.trimRight();
+                        },
                       ),
-                      obscureText: true,
-                      onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false)
-                            .password = text.trimRight();
+                    ),
+                    SizedBox(height: 5),
+                    ElevatedButton(
+                      child: Text("Sign in"),
+                      onPressed: () async {
+                        final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                        final FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
+                        bool succeed = await _performSignIn(api);
+                        if (succeed) Navigator.of(context).pop();
                       },
                     ),
-                  ),
-                  SizedBox(height: 5),
-                  RaisedButton(
-                    child: Text("Sign in"),
-                    onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
-                      final FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(
-                          email: provider.email, password: provider.password);
-                      bool succeed = await _performSignIn(api);
-                      if (succeed) Navigator.of(context).pop();
-                    },
-                  ),
-                  RaisedButton(
-                    child: Text("Create New Account"),
-                    onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
-                      final FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(
-                          email: provider.email, password: provider.password);
-                      bool succeed = await _createAccount(api);
-                      if (succeed) Navigator.of(context).pop();
-                    },
-                  )
-                ],
+                    ElevatedButton(
+                      child: Text("Create New Account"),
+                      onPressed: () async {
+                        final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                        final FirebaseEmailAuthAPI api = FirebaseEmailAuthAPI(email: provider.email, password: provider.password);
+                        bool succeed = await _createAccount(api);
+                        if (succeed) Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -172,97 +163,85 @@ class _LoginPageState extends State<LoginPage> {
   Widget _phoneSignInButton(BuildContext context) {
     final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
 
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+    return ElevatedButton(
       child: Text("Sign in with Phone"),
       onPressed: () {
         showDialog(
           context: context,
-          child: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Container(
-              height: 300,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
+          builder: (context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                height: 300,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey[700]),
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            ),
+                            hintText: "+11 123-456-7890",
+                            labelText: "Phone Number"),
+                        keyboardType: TextInputType.phone,
+                        onChanged: (text) {
+                          UserCredentialProvider.of(context, listen: false).phoneNumber = text.trim();
+                        },
+                      ),
+                    ),
+                    ElevatedButton(
+                      child: Text("Send Code"),
+                      onPressed: () async {
+                        final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                        phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent: (String verificationId, [int forceResendingToken]) {
+                          print("Code sent");
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey[700]),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
-                          hintText: "+11 123-456-7890",
-                          labelText: "Phone Number"),
-                      keyboardType: TextInputType.phone,
-                      onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false)
-                            .phoneNumber = text.trim();
-                      },
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Text("Send Code"),
-                    onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
-                      phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent:
-                          (String verificationId, [int forceResendingToken]) {
-                        print("Code sent");
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[700]),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
+                          hintText: "123456",
+                          labelText: "Code",
                         ),
-                        hintText: "123456",
-                        labelText: "Code",
+                        keyboardType: TextInputType.number,
+                        onChanged: (text) {
+                          UserCredentialProvider.of(context, listen: false).code = text.trim();
+                        },
                       ),
-                      keyboardType: TextInputType.number,
-                      onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false).code =
-                            text.trim();
-                      },
                     ),
-                  ),
-                  RaisedButton(
-                    child: Text("Sign in"),
-                    onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
-                      phoneAuthAPI.submitVerificationCode(provider.code);
-                      final result = await FirebaseAuthProvider.instance
-                          .signInWith(phoneAuthAPI);
-                      bool succeed = result != null;
-                      if (succeed) Navigator.of(context).pop();
-                    },
-                  )
-                ],
+                    ElevatedButton(
+                      child: Text("Sign in"),
+                      onPressed: () async {
+                        final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                        phoneAuthAPI.submitVerificationCode(provider.code);
+                        final result = await FirebaseAuthProvider.instance.signInWith(phoneAuthAPI);
+                        bool succeed = result != null;
+                        if (succeed) Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
   }
 
   Widget _googleSignInButton() {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+    return ElevatedButton(
       child: Text("Sign in with Google"),
       onPressed: () {
         _performSignIn(FirebaseGoogleAuthAPI());
@@ -271,10 +250,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _facebookSignInButton() {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+    return ElevatedButton(
       child: Text("Sign in with Facebook"),
       onPressed: () {
         _performSignIn(FirebaseFacebookAuthAPI());
@@ -283,10 +259,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _kakaoSignInButton() {
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+    return ElevatedButton(
       child: Text("Sign in with Kakao"),
       onPressed: () {
         _performSignIn(FirebaseKakaoAuthAPI());
@@ -307,11 +280,11 @@ class _LoginPageState extends State<LoginPage> {
     } on PlatformException catch (e) {
       print("platform exception: $e");
       final snackBar = SnackBar(content: Text(e.message));
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } catch (e) {
       print("other exceptions: $e");
       final snackBar = SnackBar(content: Text(e));
-      Scaffold.of(context).showSnackBar(snackBar);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     if (mounted) {

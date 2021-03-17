@@ -44,8 +44,7 @@ class _LandingPageState extends State<LandingPage> {
               _buildKakaoUnlinkButton(),
             ],
           ),
-          Text(
-              "May take some time linking account for Kakao if the cloud server is on cold start"),
+          Text("May take some time linking account for Kakao if the cloud server is on cold start"),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -60,7 +59,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildSignOutButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Log out"),
       onPressed: () {
         FirebaseAuthProvider.instance.signOut();
@@ -86,12 +85,11 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildFacebookLinkButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Link with Facebook"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .linkCurrentUserWith(FirebaseFacebookAuthAPI());
+          await FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseFacebookAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -101,12 +99,11 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildFacebookUnlinkButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Unlink with Facebook"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .unlinkCurrentUserFrom(FirebaseFacebookAuthAPI());
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebaseFacebookAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -116,12 +113,11 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildGoogleLinkButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Link with Google"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .linkCurrentUserWith(FirebaseGoogleAuthAPI());
+          await FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseGoogleAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -131,12 +127,11 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildGoogleUnlinkButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Unlink with Google"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .unlinkCurrentUserFrom(FirebaseGoogleAuthAPI());
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebaseGoogleAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -146,12 +141,11 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildKakaoLinkButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Link with Kakao"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .linkCurrentUserWith(FirebaseKakaoAuthAPI());
+          await FirebaseAuthProvider.instance.linkCurrentUserWith(FirebaseKakaoAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -161,12 +155,11 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget _buildKakaoUnlinkButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Unlink with Kakao"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .unlinkCurrentUserFrom(FirebaseKakaoAuthAPI());
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebaseKakaoAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);
@@ -178,111 +171,101 @@ class _LandingPageState extends State<LandingPage> {
   Widget _buildPhoneLinkButton() {
     final FirebasePhoneAuthAPI phoneAuthAPI = FirebasePhoneAuthAPI();
 
-    return RaisedButton(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+    return ElevatedButton(
       child: Text("Link with Phone"),
       onPressed: () {
         showDialog(
           context: context,
-          child: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Container(
-              height: 300,
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
+          builder: (context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Container(
+                height: 300,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey[700]),
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            ),
+                            hintText: "+11 123-456-7890",
+                            labelText: "Phone Number"),
+                        keyboardType: TextInputType.phone,
+                        onChanged: (text) {
+                          UserCredentialProvider.of(context, listen: false).phoneNumber = text.trim();
+                        },
+                      ),
+                    ),
+                    ElevatedButton(
+                      child: Text("Send Code"),
+                      onPressed: () async {
+                        final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                        phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent: (String verificationId, [int forceResendingToken]) {
+                          print("Code sent");
+                        });
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                      child: TextField(
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.grey[700]),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
                           ),
-                          hintText: "+11 123-456-7890",
-                          labelText: "Phone Number"),
-                      keyboardType: TextInputType.phone,
-                      onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false)
-                            .phoneNumber = text.trim();
-                      },
-                    ),
-                  ),
-                  RaisedButton(
-                    child: Text("Send Code"),
-                    onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
-                      phoneAuthAPI.verifyNumber(provider.phoneNumber, codeSent:
-                          (String verificationId, [int forceResendingToken]) {
-                        print("Code sent");
-                      });
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey[700]),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
+                          hintText: "123456",
+                          labelText: "Code",
                         ),
-                        hintText: "123456",
-                        labelText: "Code",
+                        keyboardType: TextInputType.number,
+                        onChanged: (text) {
+                          UserCredentialProvider.of(context, listen: false).code = text.trim();
+                        },
                       ),
-                      keyboardType: TextInputType.number,
-                      onChanged: (text) {
-                        UserCredentialProvider.of(context, listen: false).code =
-                            text.trim();
-                      },
                     ),
-                  ),
-                  RaisedButton(
-                    child: Text("Link"),
-                    onPressed: () async {
-                      final UserCredentialProvider provider =
-                          UserCredentialProvider.of(context, listen: false);
-                      phoneAuthAPI.submitVerificationCode(provider.code);
+                    ElevatedButton(
+                      child: Text("Link"),
+                      onPressed: () async {
+                        final UserCredentialProvider provider = UserCredentialProvider.of(context, listen: false);
+                        phoneAuthAPI.submitVerificationCode(provider.code);
 
-                      bool succeed;
-                      try {
-                        final User user = await FirebaseAuthProvider.instance
-                            .linkCurrentUserWith(phoneAuthAPI);
-                        succeed = user != null;
-                      } catch (e) {
-                        print(e);
-                        succeed = false;
-                      }
+                        bool succeed;
+                        try {
+                          final User user = await FirebaseAuthProvider.instance.linkCurrentUserWith(phoneAuthAPI);
+                          succeed = user != null;
+                        } catch (e) {
+                          print(e);
+                          succeed = false;
+                        }
 
-                      if (succeed) {
-                        print("Succeed");
-                        Navigator.of(context).pop();
-                        setState(() {});
-                      }
-                    },
-                  )
-                ],
+                        if (succeed) {
+                          print("Succeed");
+                          Navigator.of(context).pop();
+                          setState(() {});
+                        }
+                      },
+                    )
+                  ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
   }
 
   Widget _buildPhoneUnlinkButton() {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text("Unlink with Phone"),
       onPressed: () async {
         try {
-          await FirebaseAuthProvider.instance
-              .unlinkCurrentUserFrom(FirebasePhoneAuthAPI());
+          await FirebaseAuthProvider.instance.unlinkCurrentUserFrom(FirebasePhoneAuthAPI());
           setState(() {});
         } catch (e) {
           print(e);

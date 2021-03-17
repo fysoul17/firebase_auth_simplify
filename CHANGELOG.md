@@ -1,3 +1,8 @@
+## [3.0.0-nullsafety.0] - 17/Mar/2021
+
+- Switched facebook Package to nullsafety applied version.
+- Applied nullsafety.
+
 ## [2.1.1] - 27/Jan/2021
 
 - Removed firebase analytics

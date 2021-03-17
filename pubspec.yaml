@@ -1,27 +1,25 @@
 name: firebase_auth_simplify
 description: A high-level framework of Firebase Auth package that wraps several lines of codes to one line in order to easily use sign-in and out function.
-version: 2.1.1
+version: 3.0.0-nullsafety.0
 homepage: https://github.com/fysoul17/firebase_auth_simplify
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^0.7.0
-  firebase_auth: ^0.20.0
-  cloud_functions: ^0.9.0
-
-  provider: ^4.3.1
-
-  google_sign_in: ^4.5.1
-  kakao_flutter_sdk: ^0.6.0-beta.1
-  flutter_facebook_login: ^3.0.0
-  http: ^0.12.0+4 # Used for fetching profiles from Facebook GraphAPI
-  sign_in_with_apple: ^2.5.4
-  crypto: ^2.1.5
+  firebase_core: ^1.0.1
+  firebase_auth: ^1.0.1
+  cloud_functions: ^1.0.0
+  provider: ^5.0.0
+  google_sign_in: ^5.0.0
+  kakao_flutter_sdk: ^0.6.0-beta.2
+  flutter_login_facebook: ^1.0.1
+  http: ^0.13.0 # Used for fetching profiles from Facebook GraphAPI
+  sign_in_with_apple: ^3.0.0
+  crypto: ^3.0.0
 
 dev_dependencies:
   flutter_test:

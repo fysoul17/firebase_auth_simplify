@@ -15,19 +15,20 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
     this.webAuthOptions,
   });
 
-  final List<AppleIDAuthorizationScopes> scopes;
-  final WebAuthenticationOptions webAuthOptions;
+  final List<AppleIDAuthorizationScopes>? scopes;
+  final WebAuthenticationOptions? webAuthOptions;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Future<UserCredential> signIn() async {
     try {
-      final authResult = await _firebaseAuth.signInWithCredential(await _getCredential());
-      assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
+      final authResult =
+          await _firebaseAuth.signInWithCredential(await _getCredential());
+      assert(authResult.user!.uid == _firebaseAuth.currentUser!.uid);
 
       // When sign in is done, update email info.
-      await authResult.user.updateEmail(authResult.user.email);
+      await authResult.user!.updateEmail(authResult.user!.email!);
 
       return authResult;
     } catch (e) {
@@ -58,7 +59,8 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
       final credential = OAuthCredential(
         providerId: "apple.com", // MUST be "apple.com"
         signInMethod: "oauth", // MUST be "oauth"
-        accessToken: nativeAppleCred.identityToken, // propagate Apple ID token to BOTH accessToken and idToken parameters
+        accessToken: nativeAppleCred
+            .identityToken, // propagate Apple ID token to BOTH accessToken and idToken parameters
         idToken: nativeAppleCred.identityToken,
         rawNonce: nonce,
       );
@@ -71,8 +73,8 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
 
   String _createNonce(int length) {
     final random = Random();
-    final charCodes = List<int>.generate(length, (_) {
-      int codeUnit;
+    final charCodes = List<int?>.generate(length, (_) {
+      int? codeUnit;
 
       switch (random.nextInt(3)) {
         case 0:
@@ -89,13 +91,15 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
       return codeUnit;
     });
 
-    return String.fromCharCodes(charCodes);
+    return String.fromCharCodes(charCodes as Iterable<int>);
   }
 
   /// Apple API does not need sign up.
   @override
   Future<UserCredential> signUp() {
-    throw PlatformException(code: "UNSUPPORTED_FUNCTION", message: "Apple Signin does not need sign up.");
+    throw PlatformException(
+        code: "UNSUPPORTED_FUNCTION",
+        message: "Apple Signin does not need sign up.");
   }
 
   @override
@@ -104,18 +108,18 @@ class FirebaseAppleAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<User> linkWith(User user) async {
+  Future<User?> linkWith(User? user) async {
     try {
-      return (await user.linkWithCredential(await _getCredential())).user;
+      return (await user!.linkWithCredential(await _getCredential())).user;
     } catch (e) {
       return Future.error(e);
     }
   }
 
   @override
-  Future<void> unlinkFrom(User user) async {
+  Future<void> unlinkFrom(User? user) async {
     try {
-      await user.unlink("apple.com");
+      await user!.unlink("apple.com");
     } catch (e) {
       throw Future.error(e);
     }

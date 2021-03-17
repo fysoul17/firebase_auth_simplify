@@ -7,35 +7,35 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  AuthCredential _credential;
-  String _verificationId;
+  AuthCredential? _credential;
+  String? _verificationId;
 
   Future<void> verifyNumber(String phoneNumber,
       {bool signInOnAutoRetrieval = true,
       int timeoutSeconds = 30,
-      PhoneCodeSent codeSent,
-      PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-      PhoneVerificationCompleted verificationCompleted,
-      PhoneVerificationFailed verificationFailed}) async {
+      PhoneCodeSent? codeSent,
+      PhoneCodeAutoRetrievalTimeout? codeAutoRetrievalTimeout,
+      PhoneVerificationCompleted? verificationCompleted,
+      PhoneVerificationFailed? verificationFailed}) async {
     assert(phoneNumber != null && phoneNumber.length > 1);
 
     _firebaseAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       timeout: Duration(seconds: timeoutSeconds),
-      codeSent: (String verificationId, [int forceResendingToken]) {
+      codeSent: (String verificationId, [int? forceResendingToken]) {
         _verificationId = verificationId;
 
-        codeSent(verificationId, forceResendingToken);
+        codeSent!(verificationId, forceResendingToken);
       },
       codeAutoRetrievalTimeout: (String verificationId) {
         _verificationId = verificationId;
 
-        codeAutoRetrievalTimeout(verificationId);
+        codeAutoRetrievalTimeout!(verificationId);
       },
       verificationCompleted: (AuthCredential phoneAuthCredential) {
         _credential = phoneAuthCredential;
 
-        verificationCompleted(phoneAuthCredential);
+        verificationCompleted!(phoneAuthCredential as PhoneAuthCredential);
         if (signInOnAutoRetrieval) {
           signIn();
         }
@@ -44,17 +44,17 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
         print(error.code);
         print(error.message);
 
-        verificationFailed(error);
+        verificationFailed!(error);
       },
     );
   }
 
-  AuthCredential submitVerificationCode(String code) {
+  AuthCredential? submitVerificationCode(String code) {
     assert(_verificationId != null);
     assert(code != null && code.length == 6);
 
     _credential = PhoneAuthProvider.credential(
-      verificationId: _verificationId,
+      verificationId: _verificationId!,
       smsCode: code,
     );
 
@@ -72,8 +72,8 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
   Future<UserCredential> signIn() async {
     try {
       UserCredential result =
-          await _firebaseAuth.signInWithCredential(_credential);
-      assert(result.user.uid == _firebaseAuth.currentUser.uid);
+          await _firebaseAuth.signInWithCredential(_credential!);
+      assert(result.user!.uid == _firebaseAuth.currentUser!.uid);
       return result;
     } catch (e) {
       return Future.error(e);
@@ -86,18 +86,18 @@ class FirebasePhoneAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<User> linkWith(User user) async {
+  Future<User?> linkWith(User? user) async {
     try {
-      return (await user.linkWithCredential(_credential)).user;
+      return (await user!.linkWithCredential(_credential!)).user;
     } catch (e) {
       return Future.error(e);
     }
   }
 
   @override
-  Future<void> unlinkFrom(User user) async {
+  Future<void> unlinkFrom(User? user) async {
     try {
-      await user.unlink("phone");
+      await user!.unlink("phone");
     } catch (e) {
       throw Future.error(e);
     }

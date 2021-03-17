@@ -5,8 +5,8 @@ import 'base_auth_api.dart';
 
 class FirebaseEmailAuthAPI implements BaseAuthAPI {
   FirebaseEmailAuthAPI({
-    @required this.email,
-    @required this.password,
+    required this.email,
+    required this.password,
   });
 
   final String email;
@@ -31,7 +31,7 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
     try {
       final authResult = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      assert(authResult.user.uid == _firebaseAuth.currentUser.uid);
+      assert(authResult.user!.uid == _firebaseAuth.currentUser!.uid);
 
       return authResult;
     } catch (e) {
@@ -45,14 +45,14 @@ class FirebaseEmailAuthAPI implements BaseAuthAPI {
   }
 
   @override
-  Future<User> linkWith(User user) {
+  Future<User> linkWith(User? user) {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "e-mail sign-in does not support linking and unlinking");
   }
 
   @override
-  Future<void> unlinkFrom(User user) async {
+  Future<void> unlinkFrom(User? user) async {
     throw PlatformException(
         code: "UNSUPPORTED_FUNCTION",
         message: "e-mail sign-in does not support linking and unlinking");
