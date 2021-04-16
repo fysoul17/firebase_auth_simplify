@@ -32,7 +32,7 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
         kakao.User kakaoUser = await kakao.UserApi.instance.me();
 
         // Email is required, but kaka account doesn't have email set.
-        if (emailRequired && kakaoUser.kakaoAccount.email.isEmpty) {
+        if (emailRequired && kakaoUser.kakaoAccount!.email!.isEmpty) {
           throw PlatformException(
               code: "KAKAO_EMAIL_REQUIRED",
               message:
@@ -40,8 +40,8 @@ class FirebaseKakaoAuthAPI implements BaseAuthAPI {
         }
 
         // Whether the email is as must or not, update email if exists.
-        if (kakaoUser.kakaoAccount.email.isNotEmpty) {
-          await authResult.user!.updateEmail(kakaoUser.kakaoAccount.email);
+        if (kakaoUser.kakaoAccount!.email!.isNotEmpty) {
+          await authResult.user!.updateEmail(kakaoUser.kakaoAccount!.email!);
         }
       }
 

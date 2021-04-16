@@ -1,3 +1,7 @@
+## [3.0.1] - 16/Apr/2021
+
+- Updated kakao version to support null-safety.
+
 ## [3.0.0-nullsafety.1] - 16/Apr/2021
 
 - Updated firebase versions to support intl 0.17.0
