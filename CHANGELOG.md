@@ -1,3 +1,7 @@
+## [3.0.0-nullsafety.1] - 16/Apr/2021
+
+- Updated firebase versions to support intl 0.17.0
+
 ## [3.0.0-nullsafety.0] - 17/Mar/2021
 
 - Switched facebook Package to nullsafety applied version.
